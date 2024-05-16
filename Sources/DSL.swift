@@ -1,0 +1,161 @@
+// ----------------------------------------------------------------------------------------------------
+// DSL support
+// The intermediate types that our results builder makes into a structure.
+
+//
+// current issues:
+//
+//   see this comment in core unit test:
+//     so we can't have patch alongside the for... because of variadic not
+//     taking array of patches (which the for produce)!
+//     This means we're limited to using if and if...else in isolation for now.
+//     Maybe rethink fundamental result builder design...
+//     But don't want to make this too complicated.
+//
+
+// MARK: - Result builder
+import Foundation
+
+@resultBuilder
+public struct AddressedPatchItemsBuilder<T: PatchType> {
+    // If we can use variadics, we're not prone to the "<= 10 items" limitation seen
+    // in SwiftUI (due to needing implementation by lots of funcs to match all possible param counts!)
+
+    // empty block to empty list
+    public static func buildBlock() -> [AddressedPatch<T>] { [AddressedPatch<T>]() }
+
+    // variadic of lists to list
+    public static func buildBlock(_ patchContentItems: [AddressedPatch<T>]...) -> [AddressedPatch<T>] {
+        patchContentItems.flatMap { $0 }
+    }
+
+
+
+    // single to list
+    public static func buildBlock(_ patchContentItems: AddressedPatch<T>) -> [AddressedPatch<T>] {
+        [patchContentItems]
+    }
+
+    // list to list
+    public static func buildBlock(_ patchContentItems: [AddressedPatch<T>]) -> [AddressedPatch<T>] {
+        patchContentItems
+    }
+
+    public static func buildArray(_ components: [[AddressedPatch<T>]]) -> [AddressedPatch<T>] {
+        components.flatMap { $0 }
+    }
+    
+    // this is for when the entire patch list is nil (it's optional)
+    public static func buildOptional(_ component: [AddressedPatch<T>]?) -> [AddressedPatch<T>] {
+        component ?? []
+    }
+
+
+    public static func buildEither(first component: [AddressedPatch<T>]) -> [AddressedPatch<T>] {
+        component
+    }
+    
+    public static func buildEither(second component: [AddressedPatch<T>]) -> [AddressedPatch<T>] {
+        component
+    }
+
+    // Optional patch item handling
+    public static func buildExpression(_ addressedPatch: AddressedPatch<T>?) -> [AddressedPatch<T>] {
+        [addressedPatch ?? .empty]
+    }
+
+    public static func buildExpression(_ addressedPatch: [AddressedPatch<T>]?) -> [AddressedPatch<T>] {
+        addressedPatch ?? [.empty]
+    }
+
+    // Prune out .empty patch items from list; they can be created from the optional patch handling.
+    public static func buildFinalResult(_ component: [AddressedPatch<T>]) -> [AddressedPatch<T>] {
+        component.filter { !$0.isEmpty }
+    }
+    
+    // TODO if and if ... else.
+}
+
+// MARK: - Generic primitives for DSL:
+
+// MARK: - Patch
+
+/// Patch at Address with given Content.
+public func Patch<T: PatchType>(address: T.AddressType,
+                                withContent content: PatchedContent<T>)
+        -> AddressedPatch<T> {
+
+            let ps = PatchSpec<T>.replace(address)
+
+    return AddressedPatch(patchSpec: ps, contentPatch: content)
+}
+
+/// Convenience that wraps 'simpleContent' in a Content() with optional sub-patches
+///
+/// Examples:
+///
+///     let p1 = Patch1(address: "lex", with: "xle")
+///
+///     Patch1(address: "hunsley", with:"one two, one two") {
+///         Patch1(address: "one", with: "foo")
+///         Patch1(address: "two", with: "bar")
+///     }
+public func Patch<T: PatchType>(address: T.AddressType,
+                                with simpleContent: T.ContentType,
+                                @AddressedPatchItemsBuilder<T> patchedBy patchItems: PatchListProducer<T> = { AddressedPatch.emptyPatchList })
+        -> AddressedPatch<T> {
+
+    Patch(address: address,
+	      withContent: PatchedContent(content: simpleContent,
+	      contentPatches: patchItems()))
+}
+
+// MARK: - Content
+
+public func Content<T: PatchType>(_ content: T.ContentType,
+                                  @AddressedPatchItemsBuilder<T> patchedBy patchItems: PatchListProducer<T> = { AddressedPatch.emptyPatchList })
+        -> PatchedContent<T> {
+
+    PatchedContent(content: content, contentPatches: patchItems())
+}
+
+// MARK: Add
+
+public func Add<T: PatchType>(address: T.AddressType,
+                              content: PatchedContent<T>)
+            -> AddressedPatch<T> {
+
+    return AddressedPatch(patchSpec: PatchSpec.add(address),
+                          contentPatch: content)
+}
+
+public func Add<T: PatchType>(address: T.AddressType,
+                              simpleContent: T.ContentType,
+                              @AddressedPatchItemsBuilder<T> patchedBy patchItems: PatchListProducer<T> = { AddressedPatch.emptyPatchList })
+            -> AddressedPatch<T> {
+
+    Add(address: address,
+        content: PatchedContent(content: simpleContent,
+                                contentPatches: patchItems()))
+}
+
+// MARK: Delete
+
+public func Delete<T: PatchType>(address: T.AddressType,
+                                  with simpleContent: PatchedContent<T>? = nil,
+                                  @AddressedPatchItemsBuilder<T> patchedBy patchItems: PatchListProducer<T> = { AddressedPatch.emptyPatchList })
+        -> AddressedPatch<T> {
+
+    AddressedPatch(patchSpec: PatchSpec.delete(address),
+                   contentPatch: simpleContent)
+}
+
+// MARK: Test
+
+public func Test<T: PatchType>(address: T.AddressType,
+                               content: PatchedContent<T>? = nil)
+        -> AddressedPatch<T> {
+
+    AddressedPatch(patchSpec: PatchSpec.test(address),
+                   contentPatch: content)
+}
