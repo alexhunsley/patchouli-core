@@ -31,7 +31,7 @@ public struct StringPatchType: PatchType {
         // Note that we provide no 'move' implementation as it has no obvious meaning for string matching
     )
 
-    public static var inPlacePatcher: InPlacePatchable<StringPatchType>? = .init(
+    public static var mutatingPatcher: MutatingPatchable<StringPatchType>? = .init(
         replace: { (container: inout String, replacement: String, address: String) -> Void in
             // NB this replaces all occurrences!
             // But that’s expected for a content-based Address

@@ -18,12 +18,12 @@ public protocol PatchType {
     static var patcher: Patchable<Self> { get }
 
     // the in-place patcher is optional
-    static var inPlacePatcher: InPlacePatchable<Self>? { get }
+    static var mutatingPatcher: MutatingPatchable<Self>? { get }
 }
 
 extension PatchType {
     // nil conformance as default for the in-place patcher (means none provided)
-    public static var inPlacePatcher: InPlacePatchable<Self>? { nil }
+    public static var mutatingPatcher: MutatingPatchable<Self>? { nil }
 }
 
 // Once is very similar to Never, but it has one accessible
@@ -44,7 +44,7 @@ public struct DummyPatchType: PatchType {
 
     // The Never patch provides no functions
     public static var patcher = Patchable<DummyPatchType>()
-    public static var inPlacePatcher = InPlacePatchable<DummyPatchType>()
+    public static var inPlacePatcher = MutatingPatchable<DummyPatchType>()
 }
 
 // -----------------------------------------------------------------

@@ -11,7 +11,7 @@ public enum PatchouliError<T: PatchType>: Error {
     case witnessMissingMovedFunction
     case witnessMissingDeleteFunction
     case witnessMissingTestFunction
-    case witnessMissingReduceFunction
+    case witnessMissingMutatingReduceFunction
 
     case testFailed(T.AddressType)
 }

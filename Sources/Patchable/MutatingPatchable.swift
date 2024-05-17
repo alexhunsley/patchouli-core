@@ -9,7 +9,7 @@ import Foundation
 //
 // (Practically, I wanted to name this struct `PatchableInPlace` (for code completion etc),
 // but linguistically and semantically, InPlacePatchable is the correct name.)
-public struct InPlacePatchable<T: PatchType> {
+public struct MutatingPatchable<T: PatchType> {
     public typealias C = T.ContentType
     public typealias A = T.AddressType
 

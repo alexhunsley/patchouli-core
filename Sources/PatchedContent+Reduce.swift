@@ -23,7 +23,6 @@ public extension PatchedContent {
             switch item.patchSpec {
 
             case let .add(address):
-                // todo just call this line once above for the three places here?
                 if let newContent = try targetContent?.reduced(patcher) {
                     guard let added = patcher.added else { throw PatchouliError<T>.witnessMissingAddedFunction }
                     accumulatedReduceResult = added(accumulatedReduceResult, newContent, address)
@@ -54,9 +53,10 @@ public extension PatchedContent {
         return accumulatedReduceResult
     }
 
+    /// Convenience that calls reduce using the mutating patchable for the PatchType (i.e. T)
     mutating func reduce() throws -> Void {
-        guard let inPlacePatcher = T.inPlacePatcher else {
-            throw PatchouliError<T>.witnessMissingReduceFunction
+        guard let inPlacePatcher = T.mutatingPatcher else {
+            throw PatchouliError<T>.witnessMissingMutatingReduceFunction
         }
         try reduce(inPlacePatcher)
     }
@@ -64,7 +64,7 @@ public extension PatchedContent {
     /// Returns the content produced by applying the patches to the content
     /// using the `patcher` protocol witness.
     /// To use the default patcher for a PatchType, please instead use the convenience `reduce()`.
-    mutating func reduce(_ patcher: InPlacePatchable<T>) throws -> Void {
+    mutating func reduce(_ patcher: MutatingPatchable<T>) throws -> Void {
 //        var accumulatedReduceResult = content
 
         for item in contentPatches {
@@ -74,15 +74,9 @@ public extension PatchedContent {
             switch item.patchSpec {
 
             case let .replace(address):
-
-//                guard let targetContent else { return }
-
                 try targetContent.reduce(patcher)
-
-//                if let newContent = try targetContent?.reduce(patcher) {
                 guard let replace = patcher.replace else { throw PatchouliError<T>.witnessMissingReplaceFunction }
                 replace(&content, targetContent.content, address)
-//                }
 
             default:
                 break
