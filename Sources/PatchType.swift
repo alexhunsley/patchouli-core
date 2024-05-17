@@ -7,7 +7,7 @@ import Foundation
 public typealias PatchListProducer<T: PatchType> = () -> [AddressedPatch<T>]
 
 /// The kind of information we're patching, and how to patch it.
-/// You can make your own PatchType conformances (see e.g. StringPatchType for an exapmle).
+/// You can make your own PatchType conformances (see e.g. StringPatchType for an example).
 public protocol PatchType {
     associatedtype ContentType
     associatedtype AddressType

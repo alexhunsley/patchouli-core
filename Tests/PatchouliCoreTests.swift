@@ -408,17 +408,6 @@ extension PatchouliCoreTests {
     }
 }
 
-//enum PatchSpec<Address> {
-//    // RFC6902 JSON Patch
-////    { "op": "test", "path": "/a/b/c", "value": "foo" }
-//    // 'path' and 'op'
-//    case jsonPatch2(Address, String)
-//    // todo wrap these conveniences in their own single case (e.g. `helperSpec` or similar)
-//    case add(Address)
-//    case replace(Address)
-//    case delete(Address)
-//}
-
 // reducer tests
 extension PatchouliCoreTests {
     // TODO test that a stub reducer (protocol witness) has its functions invoked
