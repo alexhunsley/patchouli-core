@@ -87,7 +87,8 @@ final class PatchouliCoreTests: XCTestCase {
             Patch(address: "three", with: "four"),
         ]
 
-        var patchedContent: PatchedString = Content("one") {
+//        PatchedContent<StringPatchType>
+        let patchedContent: PatchedString = Content("one") {
             for index in 0...2 {
                 patch[index]
             }
@@ -95,13 +96,7 @@ final class PatchouliCoreTests: XCTestCase {
         }
 
         XCTAssertEqual(patchedContent.contentPatches.count, 4, "Unexpected number of items in patch list")
-//        XCTAssertEqual(try patchedContent.reduced(), "four", "Didn't find expected result from reduce")
-
-        // try in-place reducer (inout) -- this works. Not sure how much sense inout
-        // makes with json/strings though! But generally, having the option might be good.
-        try patchedContent.reduce()
-
-        XCTAssertEqual(patchedContent.content, "four", "Didn't find expected result from reduce")
+        try patchedContent.testReducers(expectedContent: "four")
     }
 
     func test_DSL_forInWorks() throws {
@@ -120,7 +115,7 @@ final class PatchouliCoreTests: XCTestCase {
         }
 
         XCTAssertEqual(patchedContent.contentPatches.count, 4, "Unexpected number of items in patch list")
-        XCTAssertEqual(try patchedContent.reduced(), "four", "Didn't find expected result from reduce")
+        try patchedContent.testReducers(expectedContent: "four")
     }
 
     // MARK: - If
@@ -137,7 +132,7 @@ final class PatchouliCoreTests: XCTestCase {
         }
 
         XCTAssertEqual(patchedContent.contentPatches.count, 2, "Unexpected number of items in patch list")
-        XCTAssertEqual(try patchedContent.reduced(), "two", "Didn't find expected result from reduce")
+        try patchedContent.testReducers(expectedContent: "two")
     }
 
     func test_DSL_ifFalseWorks() throws {
@@ -153,7 +148,7 @@ final class PatchouliCoreTests: XCTestCase {
         }
 
         XCTAssertEqual(patchedContent.contentPatches.count, 1, "Unexpected number of items in patch list")
-        XCTAssertEqual(try patchedContent.reduced(), "one", "Didn't find expected result from reduce")
+        try patchedContent.testReducers(expectedContent: "one")
     }
 
     func test_DSL_ifElseTrueWorks() throws {
@@ -174,7 +169,7 @@ final class PatchouliCoreTests: XCTestCase {
         }
 
         XCTAssertEqual(patchedContent.contentPatches.count, 2, "Unexpected number of items in patch list")
-        XCTAssertEqual(try patchedContent.reduced(), "two", "Didn't find expected result from reduce")
+        try patchedContent.testReducers(expectedContent: "two")
     }
 
     func test_DSL_ifElseFalseWorks() throws {
@@ -193,7 +188,7 @@ final class PatchouliCoreTests: XCTestCase {
         }
 
         XCTAssertEqual(patchedContent.contentPatches.count, 2, "Unexpected number of items in patch list")
-        XCTAssertEqual(try patchedContent.reduced(), "two", "Didn't find expected result from reduce")
+        try patchedContent.testReducers(expectedContent: "two")
     }
 
     func test_DSL_ifElseFalseContainingPatchedContentWorks() throws {
@@ -214,9 +209,8 @@ final class PatchouliCoreTests: XCTestCase {
                 patch
             }
         }
-
         XCTAssertEqual(patchedContent.contentPatches.count, 2, "Unexpected number of items in patch list")
-        XCTAssertEqual(try patchedContent.reduced(), "three", "Didn't find expected result from reduce")
+        try patchedContent.testReducers(expectedContent: "three")
     }
 
     func test_DSL_ifElseFalseContainingOptionalPatchedContentWorks() throws {
@@ -236,9 +230,8 @@ final class PatchouliCoreTests: XCTestCase {
             }
             Patch(address: "tree", with: "horse")
         }
-
         XCTAssertEqual(patchedContent.contentPatches.count, 2, "Unexpected number of items in patch list")
-        XCTAssertEqual(try patchedContent.reduced(), "three", "Didn't find expected result from reduce")
+        try patchedContent.testReducers(expectedContent: "three")
     }
 
     // doesn't work, same as the if next to Patch issue: variadics not taking an array, and if/for produces an array.
@@ -259,9 +252,8 @@ final class PatchouliCoreTests: XCTestCase {
 
             patch
         }
-
         XCTAssertEqual(patchedContent.contentPatches.count, 3, "Unexpected number of items in patch list")
-        XCTAssertEqual(try patchedContent.reduced(), "three", "Didn't find expected result from reduce")
+        try patchedContent.testReducers(expectedContent: "three")
     }
 
     // MARK: - Patches
@@ -394,7 +386,7 @@ final class PatchouliCoreTests: XCTestCase {
         }
 
         XCTAssertEqual(patchedContent.contentPatches.count, 12, "Unexpected number of items in patch list")
-        XCTAssertEqual(try patchedContent.reduced(), "four", "Didn't find expected result from reduce")
+        try patchedContent.testReducers(expectedContent: "four")
     }
 }
 
