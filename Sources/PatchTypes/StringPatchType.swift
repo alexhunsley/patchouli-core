@@ -26,6 +26,8 @@ public struct StringPatchType: PatchType {
             // But that’s expected for a content-based Address
             container.replacingOccurrences(of: address, with: replacement)
         },
+        // 'copied' doesn't really make sense.
+        // 'moved' doesn't really make sense.
         test: { (container: String, address: String) in
             container.contains(address)
         }
@@ -33,10 +35,19 @@ public struct StringPatchType: PatchType {
     )
 
     public static var mutatingPatcher: MutatingPatchable<StringPatchType>? = .init(
-        replace: { (container: inout String, replacement: String, address: String) -> Void in
-            // NB this replaces all occurrences!
-            // But that’s expected for a content-based Address
+        added: { (container: inout String, address: String, content: String) in
+            // We interpret 'add' in string matching to mean "place a copy of content
+            // before every occurence of the address".
+            // if the address isn't found in the string, we don't care.
+            container = container.prefixing(address, with: content)
+        },
+        removed: { (container: inout String, address: String) in
+            container = container.replacingOccurrences(of: address, with: "")
+        },
+        replace: { (container: inout String, replacement: String, address: String) in
             container = container.replacingOccurrences(of: address, with: replacement)
         }
+        // 'copy' doesn't really make sense.
+        // 'move' doesn't really make sense.
     )
 }
