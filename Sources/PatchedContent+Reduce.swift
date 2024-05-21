@@ -55,10 +55,10 @@ public extension PatchedContent {
 
     /// Convenience that calls reduce using the mutating patchable for the PatchType (i.e. T)
     mutating func reduce() throws -> Void {
-        guard let inPlacePatcher = T.mutatingPatcher else {
+        guard let mutatingPatcher = T.mutatingPatcher else {
             throw PatchouliError<T>.witnessMissingMutatingReduceFunction
         }
-        try reduce(inPlacePatcher)
+        try reduce(mutatingPatcher)
     }
 
     /// Returns the content produced by applying the patches to the content

@@ -44,7 +44,7 @@ public struct DummyPatchType: PatchType {
 
     // The Never patch provides no functions
     public static var patcher = Patchable<DummyPatchType>()
-    public static var inPlacePatcher = MutatingPatchable<DummyPatchType>()
+    public static var mutatingPatcher = MutatingPatchable<DummyPatchType>()
 }
 
 // -----------------------------------------------------------------

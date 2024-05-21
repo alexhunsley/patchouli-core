@@ -5,10 +5,10 @@ import Foundation
 // a struct, this is a hint that it's a notocol.
 //
 // Protocol witness instantiations of this type should lose the
-// gerund style and be named e.g. 'inPlacePatcher'.
+// gerund style and be named e.g. 'mutablePatcher'.
 //
 // (Practically, I wanted to name this struct `PatchableInPlace` (for code completion etc),
-// but linguistically and semantically, InPlacePatchable is the correct name.)
+// but linguistically and semantically, mutatingPatchable is the correct name.)
 public struct MutatingPatchable<T: PatchType> {
     public typealias C = T.ContentType
     public typealias A = T.AddressType
