@@ -4,14 +4,19 @@ import XCTest
 @testable import PatchouliCore
 
 extension PatchType {
-    static public func testingPatcher(nilReplacedFunc: Bool = false,
-                                        nilMovedFunc: Bool = false,
-                                        nilDeletedFunc: Bool = false,
-                                        nilAddedFunc: Bool = false) -> Patchable<Self> {
+    static public func testingPatcher(nilAddedFunc: Bool = false,
+                                      nilRemovedFunc: Bool = false,
+                                      nilReplacedFunc: Bool = false,
+                                      nilCopiedFunc: Bool = false,
+                                      nilMovedFunc: Bool = false,
+                                      nilTestFunc: Bool = false) -> Patchable<Self> {
         Patchable(added: nilAddedFunc ? nil : patcher.added,
+                  removed: nilRemovedFunc ? nil : patcher.removed,
                   replaced: nilReplacedFunc ? nil : patcher.replaced,
+                  copied: nilCopiedFunc ? nil : patcher.copied,
                   moved: nilMovedFunc ? nil : patcher.moved,
-                  deleted: nilDeletedFunc ? nil : patcher.deleted)
+                  test: nilTestFunc ? nil : patcher.test
+        )
     }
 }
 

@@ -149,10 +149,10 @@ extension PatchouliCoreTests {
             Remove(address: "hi")
         }
 
-        let noDeletedFunctionPatcher = StringPatchType.testingPatcher(nilDeletedFunc: true)
+        let noDeletedFunctionPatcher = StringPatchType.testingPatcher(nilRemovedFunc: true)
 
         XCTAssertThrowsError(try patchedContent.reduced(noDeletedFunctionPatcher)) { error in
-            guard case PatchouliError<StringPatchType>.witnessMissingDeleteFunction = error else {
+            guard case PatchouliError<StringPatchType>.witnessMissingRemoveFunction = error else {
                 XCTFail("Didn't get expected replace missing error: got \(error)")
                 return
             }

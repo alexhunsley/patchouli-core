@@ -18,13 +18,13 @@ public struct StringPatchType: PatchType {
             // if the address isn't found in the string, we don't care.
             container.prefixing(address, with: content)
         },
+        removed: { (container: String, address: String) in
+            container.replacingOccurrences(of: address, with: "")
+        },
         replaced: { (container: String, replacement: String, address: String) -> String in
             // NB this replaces all occurrences!
             // But that’s expected for a content-based Address
             container.replacingOccurrences(of: address, with: replacement)
-        },
-        deleted: { (container: String, address: String) in
-            container.replacingOccurrences(of: address, with: "")
         },
         test: { (container: String, address: String) in
             container.contains(address)

@@ -9,7 +9,7 @@ public enum PatchouliError<T: PatchType>: Error {
     case witnessMissingReplaceFunction
     case witnessMissingAddedFunction
     case witnessMissingMovedFunction
-    case witnessMissingDeleteFunction
+    case witnessMissingRemoveFunction
     case witnessMissingTestFunction
     case witnessMissingMutatingReduceFunction
 

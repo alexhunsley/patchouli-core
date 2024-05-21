@@ -11,35 +11,34 @@ public struct Patchable<T: PatchType> {
     public typealias A = T.AddressType
 
     public typealias AddedHandler = @Sendable (C, C, A) -> C
+    public typealias RemovedHandler = @Sendable (C, A) -> C
     public typealias ReplacedHandler = @Sendable (C, C, A) -> C
+    public typealias CopiedHandler = @Sendable (C, A, A) -> C
     public typealias MovedHandler = @Sendable (C, A, A) -> C
-    public typealias DeletedHandler = @Sendable (C, A) -> C
     public typealias TestHandler = @Sendable (C, A) -> Bool
 
-    public typealias ReplaceHandler = @Sendable (inout C, C, A) -> Void
-
     public let added: AddedHandler?
+    public let removed: RemovedHandler?
     public let replaced: ReplacedHandler?
-    public let replace: ReplaceHandler?
+    public let copied: CopiedHandler?
     public let moved: MovedHandler?
-    public let deleted: DeletedHandler?
     // We may eventually want to make this throw (and return Void)
     // in order to let PatchType writers give error information
     // (would be wrapped in the Patchouli 'test failed' error)
     public let test: TestHandler?
 
     public init(added: AddedHandler? = nil,
+                removed: RemovedHandler? = nil,
                 replaced: ReplacedHandler? = nil,
-                replace: ReplaceHandler? = nil,
+                copied: CopiedHandler? = nil,
                 moved: MovedHandler? = nil,
-                deleted: DeletedHandler? = nil,
                 test: TestHandler? = nil) {
 
         self.added = added
+        self.removed = removed
         self.replaced = replaced
-        self.replace = replace
+        self.copied = copied
         self.moved = moved
-        self.deleted = deleted
         self.test = test
     }
 }

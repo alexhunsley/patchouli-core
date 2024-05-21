@@ -39,8 +39,8 @@ public extension PatchedContent {
                 accumulatedReduceResult = moved(accumulatedReduceResult, fromAddress, toAddress)
 
             case let .delete(address):
-                guard let deleted = patcher.deleted else { throw PatchouliError<T>.witnessMissingDeleteFunction }
-                accumulatedReduceResult = deleted(accumulatedReduceResult, address)
+                guard let removed = patcher.removed else { throw PatchouliError<T>.witnessMissingRemoveFunction }
+                accumulatedReduceResult = removed(accumulatedReduceResult, address)
 
             case let .test(address):
                 guard let test = patcher.test else { throw PatchouliError<T>.witnessMissingTestFunction }
