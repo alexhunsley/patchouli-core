@@ -2,6 +2,7 @@ import Foundation
 
 public typealias PatchedString = PatchedContent<StringPatchType>
 public typealias StringPatchItem = AddressedPatch<StringPatchType>
+public typealias StringPatchList = [StringPatchItem]
 
 public struct StringPatchType: PatchType {
     public typealias ContentType = String

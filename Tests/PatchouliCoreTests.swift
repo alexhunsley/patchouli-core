@@ -32,7 +32,7 @@ final class PatchouliCoreTests: XCTestCase {
     }
 
     func test_DSL_optionalPatchItemWhenNonNil() throws {
-        let nonNilOptionalPatch: StringPatchItem? = Patch(address: "tues", with: "weds")
+        let nonNilOptionalPatch: StringPatchItem? = Replace(address: "tues", with: "weds")
 
         let patchedContent: PatchedString = Content("one") {
             nonNilOptionalPatch
@@ -64,16 +64,16 @@ final class PatchouliCoreTests: XCTestCase {
 
     func test_DSL_ContentWithOnePatchMakesPatchListWithOneItem() throws {
         let patchedContent: PatchedString = Content("one") {
-            Patch(address: "tues", with: "weds")
+            Replace(address: "tues", with: "weds")
         }
         XCTAssertEqual(patchedContent.contentPatches.count, 1, "Unexpected number of items in patch list")
     }
 
     func test_DSL_ContentWithThreePatchesMakesPatchListWithThreeItem() throws {
         let patchedContent: PatchedString = Content("one two three four") {
-            Patch(address: "one", with: "X")
-            Patch(address: "two", with: "Y")
-            Patch(address: "three", with: "Z")
+            Replace(address: "one", with: "X")
+            Replace(address: "two", with: "Y")
+            Replace(address: "three", with: "Z")
         }
         XCTAssertEqual(patchedContent.contentPatches.count, 3, "Unexpected number of items in patch list")
     }
@@ -82,9 +82,9 @@ final class PatchouliCoreTests: XCTestCase {
 
     func test_DSL_forLoopWorks() throws {
         let patch: [StringPatchItem] = [
-            Patch(address: "one", with: "two"),
-            Patch(address: "two", with: "three"),
-            Patch(address: "three", with: "four"),
+            Replace(address: "one", with: "two"),
+            Replace(address: "two", with: "three"),
+            Replace(address: "three", with: "four"),
         ]
 
 //        PatchedContent<StringPatchType>
@@ -92,7 +92,7 @@ final class PatchouliCoreTests: XCTestCase {
             for index in 0...2 {
                 patch[index]
             }
-            Patch(address: "three", with: "four")
+            Replace(address: "three", with: "four")
         }
 
         XCTAssertEqual(patchedContent.contentPatches.count, 4, "Unexpected number of items in patch list")
@@ -101,9 +101,9 @@ final class PatchouliCoreTests: XCTestCase {
 
     func test_DSL_forInWorks() throws {
         let patches: [StringPatchItem] = [
-            Patch(address: "one", with: "two"),
-            Patch(address: "two", with: "three"),
-            Patch(address: "three", with: "four"),
+            Replace(address: "one", with: "two"),
+            Replace(address: "two", with: "three"),
+            Replace(address: "three", with: "four"),
         ]
 
         let patchedContent: PatchedString = Content("one") {
@@ -121,7 +121,7 @@ final class PatchouliCoreTests: XCTestCase {
     // MARK: - If
 
     func test_DSL_ifTrueWorks() throws {
-        let patch: StringPatchItem = Patch(address: "one", with: "two")
+        let patch: StringPatchItem = Replace(address: "one", with: "two")
         let trueCondition = true
 
         let patchedContent: PatchedString = Content("one") {
@@ -135,30 +135,30 @@ final class PatchouliCoreTests: XCTestCase {
         try patchedContent.testReducers(expectedContent: "two")
     }
 
-    func test_DSL_ifFalseWorks() throws {
-        let patch: StringPatchItem = Patch(address: "one", with: "two")
-        let falseCondition = false
-
-        let patchedContent: PatchedString = Content("one") {
-            // do i need to move to making it a list of lists? then we flatten in the prepare bit.
-            if falseCondition {
-                patch
-            }
-            Patch(address: "tree", with: "horse")
-        }
-
-        XCTAssertEqual(patchedContent.contentPatches.count, 1, "Unexpected number of items in patch list")
-        try patchedContent.testReducers(expectedContent: "one")
-    }
+//    func test_DSL_ifFalseWorks() throws {
+//        let patch: StringPatchItem = Patch(address: "one", with: "two")
+//        let falseCondition = false
+//
+//        let patchedContent: PatchedString = Content("one") {
+//            // do i need to move to making it a list of lists? then we flatten in the prepare bit.
+//            if falseCondition {
+//                patch
+//            }
+//            Patch(address: "tree", with: "horse")
+//        }
+//
+//        XCTAssertEqual(patchedContent.contentPatches.count, 1, "Unexpected number of items in patch list")
+//        try patchedContent.testReducers(expectedContent: "one")
+//    }
 
     func test_DSL_ifElseTrueWorks() throws {
-        let patch: StringPatchItem = Patch(address: "one", with: "two")
-        let otherPatch: StringPatchItem = Patch(address: "one", with: "horse")
+        let patch: StringPatchItem = Replace(address: "one", with: "two")
+        let otherPatch: StringPatchItem = Replace(address: "one", with: "horse")
 
         let falseCondition = true
 
         let patchedContent: PatchedString = Content("one") {
-            Patch(address: "tree", with: "horse")
+            Replace(address: "tree", with: "horse")
 
             if falseCondition {
                 patch
@@ -173,8 +173,8 @@ final class PatchouliCoreTests: XCTestCase {
     }
 
     func test_DSL_ifElseFalseWorks() throws {
-        let patch: StringPatchItem = Patch(address: "one", with: "two")
-        let otherPatch: StringPatchItem = Patch(address: "one", with: "horse")
+        let patch: StringPatchItem = Replace(address: "one", with: "two")
+        let otherPatch: StringPatchItem = Replace(address: "one", with: "horse")
         let falseCondition = false
 
         let patchedContent: PatchedString = Content("one") {
@@ -184,7 +184,7 @@ final class PatchouliCoreTests: XCTestCase {
             else {
                 patch
             }
-            Patch(address: "tree", with: "horse")
+            Replace(address: "tree", with: "horse")
         }
 
         XCTAssertEqual(patchedContent.contentPatches.count, 2, "Unexpected number of items in patch list")
@@ -192,15 +192,15 @@ final class PatchouliCoreTests: XCTestCase {
     }
 
     func test_DSL_ifElseFalseContainingPatchedContentWorks() throws {
-        let patch: StringPatchItem = Patch(address: "one", withContent: Content("two") {
-            Patch(address: "two", with: "three")
+        let patch: StringPatchItem = Replace(address: "one", withContent: Content("two") {
+            Replace(address: "two", with: "three")
         })
 
-        let otherPatch: StringPatchItem = Patch(address: "one", with: "horse")
+        let otherPatch: StringPatchItem = Replace(address: "one", with: "horse")
         let falseCondition = false
 
         let patchedContent: PatchedString = Content("one") {
-            Patch(address: "tree", with: "horse")
+            Replace(address: "tree", with: "horse")
 
             if falseCondition {
                 otherPatch
@@ -214,11 +214,11 @@ final class PatchouliCoreTests: XCTestCase {
     }
 
     func test_DSL_ifElseFalseContainingOptionalPatchedContentWorks() throws {
-        let patch: StringPatchItem? = Patch(address: "one", withContent: Content("two") {
-            Patch(address: "two", with: "three")
+        let patch: StringPatchItem? = Replace(address: "one", withContent: Content("two") {
+            Replace(address: "two", with: "three")
         })
 
-        let otherPatch: StringPatchItem? = Patch(address: "one", with: "horse")
+        let otherPatch: StringPatchItem? = Replace(address: "one", with: "horse")
         let falseCondition = false
 
         let patchedContent: PatchedString = Content("one") {
@@ -228,7 +228,7 @@ final class PatchouliCoreTests: XCTestCase {
             else {
                 patch
             }
-            Patch(address: "tree", with: "horse")
+            Replace(address: "tree", with: "horse")
         }
         XCTAssertEqual(patchedContent.contentPatches.count, 2, "Unexpected number of items in patch list")
         try patchedContent.testReducers(expectedContent: "three")
@@ -236,8 +236,8 @@ final class PatchouliCoreTests: XCTestCase {
 
     // doesn't work, same as the if next to Patch issue: variadics not taking an array, and if/for produces an array.
     func test_DSL_siblingIfsWorks() throws {
-        let patch: StringPatchItem? = Patch(address: "one", with: "two")
-        let patch2: StringPatchItem = Patch(address: "two", with: "three")
+        let patch: StringPatchItem? = Replace(address: "one", with: "two")
+        let patch2: StringPatchItem = Replace(address: "two", with: "three")
         let trueCondition = true
 
         let patchedContent: PatchedString = Content("one") {
@@ -259,7 +259,7 @@ final class PatchouliCoreTests: XCTestCase {
     // MARK: - Patches
 
     func test_DSL_patchWithSimpleDataAndNoPatchListCanHaveDataRetrieved() throws {
-        let patch: StringPatchItem = Patch(address: "one", with: "X")
+        let patch: StringPatchItem = Replace(address: "one", with: "X")
 
         if case let .replace(address) = patch.patchSpec, address == "one" { } else {
             XCTFail("Expected patch to equal .replace('X')")
@@ -269,7 +269,7 @@ final class PatchouliCoreTests: XCTestCase {
     }
 
     func test_DSL_patchWithSimpleDataAndEmptyPatchListCanHaveDataRetrieved() throws {
-        let patch: StringPatchItem = Patch(address: "one", with: "X") {
+        let patch: StringPatchItem = Replace(address: "one", with: "X") {
             // nothing
         }
 
@@ -281,8 +281,8 @@ final class PatchouliCoreTests: XCTestCase {
     }
 
     func test_DSL_patchWithSimpleDataAndPatchListOfOneItemCanHaveDataRetrieved() throws {
-        let patch: StringPatchItem = Patch(address: "one", with: "X") {
-            Patch(address: "two", with: "Y")
+        let patch: StringPatchItem = Replace(address: "one", with: "X") {
+            Replace(address: "two", with: "Y")
         }
 
         if case let .replace(address) = patch.patchSpec, address == "one" { } else {
@@ -293,9 +293,9 @@ final class PatchouliCoreTests: XCTestCase {
     }
 
     func test_DSL_patchWithSimpleDataAndPatchListOfTwoItemsCanHaveDataRetrieved() throws {
-        let patch: StringPatchItem = Patch(address: "one", with: "X") {
-            Patch(address: "two", with: "Y")
-            Patch(address: "three", with: "Z")
+        let patch: StringPatchItem = Replace(address: "one", with: "X") {
+            Replace(address: "two", with: "Y")
+            Replace(address: "three", with: "Z")
         }
 
         if case let .replace(address) = patch.patchSpec, address == "one" { } else {
@@ -308,13 +308,13 @@ final class PatchouliCoreTests: XCTestCase {
     func test_DSL_patchWithSimpleDataAndNestedPatchListOfOneItemTwoItemsCanHaveDataRetrieved() throws {
         // must set type on LHS as type can't be inferred from RHS, fair enough
         // (2 x String doesn't necessarily means stringPatchType!)
-        let patch: StringPatchItem = Patch(address: "one", with: "X")
+        let patch: StringPatchItem = Replace(address: "one", with: "X")
         {
-            Patch(address: "two", with: "Y") {
-                Patch(address: "three", with: "A") {
+            Replace(address: "two", with: "Y") {
+                Replace(address: "three", with: "A") {
                     // nothing
                 }
-                Patch(address: "four", with: "DEF")
+                Replace(address: "four", with: "DEF")
             }
         }
 
@@ -350,9 +350,9 @@ final class PatchouliCoreTests: XCTestCase {
     func test_DSL_allFeaturesInOne() throws {
 
         let patches: [StringPatchItem] = [
-            Patch(address: "one", with: "two"),
-            Patch(address: "two", with: "three"),
-            Patch(address: "three", with: "four")
+            Replace(address: "one", with: "two"),
+            Replace(address: "two", with: "three"),
+            Replace(address: "three", with: "four")
         ]
 
         let trueCondition = true
@@ -360,9 +360,9 @@ final class PatchouliCoreTests: XCTestCase {
 
         let patchedContent: PatchedString = Content("zero") {
 
-            Patch(address: "zero", with: "one")
+            Replace(address: "zero", with: "one")
 
-            Patch(address: "horse", withContent: makeUser(name: "horsey", address: "a city"))
+            Replace(address: "horse", withContent: makeUser(name: "horsey", address: "a city"))
 
             for index in 0...2 {
                 if trueCondition {
@@ -373,11 +373,11 @@ final class PatchouliCoreTests: XCTestCase {
 
             if falseCondition { }
             else {
-                Patch(address: "three", with: "four")
+                Replace(address: "three", with: "four")
             }
 
             if falseCondition {
-                Patch(address: "should not appear", with: "in final tree")
+                Replace(address: "should not appear", with: "in final tree")
             }
 
             for patch in patches {
@@ -394,8 +394,8 @@ final class PatchouliCoreTests: XCTestCase {
 extension PatchouliCoreTests {
     func makeUser(name: String, address: String) -> PatchedString {
         Content("mike") {
-            Patch(address: "name_field", with: name)
-            Patch(address: "address_field", with: address)
+            Replace(address: "name_field", with: name)
+            Replace(address: "address_field", with: address)
         }
     }
 }

@@ -78,38 +78,6 @@ public struct AddressedPatchItemsBuilder<T: PatchType> {
 
 // MARK: - Generic primitives for DSL:
 
-// MARK: - Patch
-
-/// Patch at Address with given Content.
-public func Patch<T: PatchType>(address: T.AddressType,
-                                withContent content: PatchedContent<T>)
-        -> AddressedPatch<T> {
-
-            let ps = PatchSpec<T>.replace(address)
-
-    return AddressedPatch(patchSpec: ps, contentPatch: content)
-}
-
-/// Convenience that wraps 'simpleContent' in a Content() with optional sub-patches
-///
-/// Examples:
-///
-///     let p1 = Patch1(address: "lex", with: "xle")
-///
-///     Patch1(address: "hunsley", with:"one two, one two") {
-///         Patch1(address: "one", with: "foo")
-///         Patch1(address: "two", with: "bar")
-///     }
-public func Patch<T: PatchType>(address: T.AddressType,
-                                with simpleContent: T.ContentType,
-                                @AddressedPatchItemsBuilder<T> patchedBy patchItems: PatchListProducer<T> = { AddressedPatch.emptyPatchList })
-        -> AddressedPatch<T> {
-
-    Patch(address: address,
-	      withContent: PatchedContent(content: simpleContent,
-	      contentPatches: patchItems()))
-}
-
 // MARK: - Content
 
 public func Content<T: PatchType>(_ content: T.ContentType,
@@ -117,6 +85,14 @@ public func Content<T: PatchType>(_ content: T.ContentType,
         -> PatchedContent<T> {
 
     PatchedContent(content: content, contentPatches: patchItems())
+}
+
+// makeContent?
+public func Content<T: PatchType>(_ content: T.ContentType,
+                                  patchList: [AddressedPatch<T>])
+        -> PatchedContent<T> {
+
+    PatchedContent(content: content, contentPatches: patchList)
 }
 
 // MARK: Add
@@ -139,15 +115,62 @@ public func Add<T: PatchType>(address: T.AddressType,
                                 contentPatches: patchItems()))
 }
 
-// MARK: Delete
+// MARK: Remove
 
-public func Delete<T: PatchType>(address: T.AddressType,
-                                  with simpleContent: PatchedContent<T>? = nil,
+public func Remove<T: PatchType>(address: T.AddressType) -> AddressedPatch<T> {
+
+    AddressedPatch(patchSpec: .delete(address))
+}
+
+// MARK: - Patch
+
+/// Patch at Address with given Content.
+public func Replace<T: PatchType>(address: T.AddressType,
+                                  withContent content: PatchedContent<T>)
+        -> AddressedPatch<T> {
+
+    return AddressedPatch(patchSpec: .replace(address),
+                          contentPatch: content)
+}
+
+/// Convenience that wraps 'simpleContent' in a Content() with optional sub-patches
+///
+/// Examples:
+///
+///     let p1 = Patch1(address: "lex", with: "xle")
+///
+///     Patch1(address: "hunsley", with:"one two, one two") {
+///         Patch1(address: "one", with: "foo")
+///         Patch1(address: "two", with: "bar")
+///     }
+///
+///     // make 'withPatchedSimpleContent' variant? For when list follows...?
+public func Replace<T: PatchType>(address: T.AddressType,
+                                  with simpleContent: T.ContentType,
                                   @AddressedPatchItemsBuilder<T> patchedBy patchItems: PatchListProducer<T> = { AddressedPatch.emptyPatchList })
         -> AddressedPatch<T> {
 
-    AddressedPatch(patchSpec: PatchSpec.delete(address),
-                   contentPatch: simpleContent)
+            Replace(address: address,
+                    withContent: PatchedContent(content: simpleContent,
+                                                contentPatches: patchItems()))
+}
+
+// MARK: Copy
+
+public func Copy<T: PatchType>(fromAddress: T.AddressType,
+                               toAddress: T.AddressType)
+        -> AddressedPatch<T> {
+
+    return AddressedPatch(patchSpec: .move(fromAddress, toAddress))
+}
+
+// MARK: Move
+
+public func Move<T: PatchType>(fromAddress: T.AddressType,
+                               toAddress: T.AddressType)
+        -> AddressedPatch<T> {
+
+    return AddressedPatch(patchSpec: .move(fromAddress, toAddress))
 }
 
 // MARK: Test
@@ -156,6 +179,6 @@ public func Test<T: PatchType>(address: T.AddressType,
                                content: PatchedContent<T>? = nil)
         -> AddressedPatch<T> {
 
-    AddressedPatch(patchSpec: PatchSpec.test(address),
+    AddressedPatch(patchSpec: .test(address),
                    contentPatch: content)
 }
