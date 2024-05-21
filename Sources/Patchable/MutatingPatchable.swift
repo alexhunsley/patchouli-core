@@ -13,12 +13,40 @@ public struct MutatingPatchable<T: PatchType> {
     public typealias C = T.ContentType
     public typealias A = T.AddressType
 
+    public typealias AddHandler = @Sendable (inout C, C, A) -> Void
+    public typealias RemoveHandler = @Sendable (inout C, A) -> Void
     public typealias ReplaceHandler = @Sendable (inout C, C, A) -> Void
+    public typealias CopyHandler = @Sendable (inout C, A, A) -> Void
+    public typealias MoveHandler = @Sendable (inout C, A, A) -> Void
+    public typealias TestHandler = @Sendable (inout C, A) -> Bool
 
+
+
+
+    public let add: AddHandler?
+    public let remove: RemoveHandler?
     public let replace: ReplaceHandler?
+    public let copy: CopyHandler?
+    public let move: MoveHandler?
+    // We may eventually want to make this throw (and return Void)
+    // in order to let PatchType writers give error information
+    // (would be wrapped in the Patchouli 'test failed' error)
+    public let test: TestHandler?
 
-    public init(replace: ReplaceHandler? = nil) {
+
+    public init(added: AddHandler? = nil,
+                removed: RemoveHandler? = nil,
+                replace: ReplaceHandler? = nil,
+                copied: CopyHandler? = nil,
+                moved: MoveHandler? = nil,
+                test: TestHandler? = nil) {
+
+        self.add = added
+        self.remove = removed
         self.replace = replace
+        self.copy = copied
+        self.move = moved
+        self.test = test
     }
 }
 
