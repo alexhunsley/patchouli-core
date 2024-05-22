@@ -124,6 +124,14 @@ extension PatchouliCoreTests {
         XCTAssertEqual(try patchedContent.reduced(), "pidigitation  pidigitation")
     }
 
+    func test_stringReducer_moveWorksFromSingleToSingle() throws {
+
+        let patchedContent: PatchedString = Content("repetitiv_horse_e") {
+            Move(fromAddress: "pet", toAddress: "_horse_")
+        }
+        XCTAssertEqual(try patchedContent.reduced(), "reitivpete")
+    }
+
     func test_stringReducer_moveWorksFromMultiToSingle() throws {
 
         let patchedContent: PatchedString = Content("repetitive") {
@@ -132,12 +140,20 @@ extension PatchouliCoreTests {
         XCTAssertEqual(try patchedContent.reduced(), "tipeve")
     }
 
-    func test_stringReducer_moveWorksWithMultipleMatches() throws {
+    func test_stringReducer_moveWorksFromSingleToMulti() throws {
 
-        let patchedContent: PatchedString = Content("prestidigitation rest prestidigitation") {
-            Remove(address: "rest")
+        let patchedContent: PatchedString = Content("repetitive") {
+            Move(fromAddress: "tive", toAddress: "e")
         }
-        XCTAssertEqual(try patchedContent.reduced(), "pidigitation  pidigitation")
+        XCTAssertEqual(try patchedContent.reduced(), "rtiveptiveti")
+    }
+
+    func test_stringReducer_moveWorksFromMultiToMulti() throws {
+
+        let patchedContent: PatchedString = Content("repetitive rep") {
+            Move(fromAddress: "ti", toAddress: "re")
+        }
+        XCTAssertEqual(try patchedContent.reduced(), "tipeve tip")
     }
 
     // MARK: - Strict order of reducer application
