@@ -16,7 +16,7 @@ extension PatchouliCoreTests {
 
 extension PatchouliCoreTests {
 
-    @AddressedPatchItemsBuilder<StringPatchType> func makeSamplePatchList() -> [AddressedPatch<StringPatchType>] {
+    @AddressedPatchItemsBuilder<StringPatchType> func makeSamplePatchList() -> StringPatchList {
         Replace(address: "one", with: "hello") {
             Replace(address: "hello", with: "goodbye")
         }
@@ -29,7 +29,6 @@ extension PatchouliCoreTests {
 
         // Result: "one"
         XCTAssertEqual(try trivialPatchedString.reduced(), "one")
-
 
         // make a patch list using a helper func
         let patchList = makeSamplePatchList()

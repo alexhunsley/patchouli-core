@@ -47,8 +47,6 @@ public struct AddressedPatchItemsBuilder<T: PatchType> {
         patchContentItems.flatMap { $0 }
     }
 
-
-
     // single to list
     public static func buildBlock(_ patchContentItems: AddressedPatch<T>) -> [AddressedPatch<T>] {
         [patchContentItems]
@@ -67,7 +65,6 @@ public struct AddressedPatchItemsBuilder<T: PatchType> {
     public static func buildOptional(_ component: [AddressedPatch<T>]?) -> [AddressedPatch<T>] {
         component ?? []
     }
-
 
     public static func buildEither(first component: [AddressedPatch<T>]) -> [AddressedPatch<T>] {
         component

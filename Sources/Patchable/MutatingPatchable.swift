@@ -23,9 +23,6 @@ public struct MutatingPatchable<T: PatchType> {
     public typealias MoveHandler = @Sendable (inout C, A, A) -> Void
     public typealias TestHandler = @Sendable (inout C, A) -> Bool
 
-
-
-
     public let add: AddHandler?
     public let remove: RemoveHandler?
     public let replace: ReplaceHandler?
@@ -35,7 +32,6 @@ public struct MutatingPatchable<T: PatchType> {
     // in order to let PatchType writers give error information
     // (would be wrapped in the Patchouli 'test failed' error)
     public let test: TestHandler?
-
 
     public init(added: AddHandler? = nil,
                 removed: RemoveHandler? = nil,
