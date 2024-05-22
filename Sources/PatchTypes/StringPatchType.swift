@@ -12,12 +12,13 @@ public struct StringPatchType: PatchType {
 
     /// The Protocol Witness used by the reducer
     static public let patcher = Patchable<StringPatchType>(
-        added: { (container: String, address: String, content: String) -> String in
+        added: { (container: String, content: String, address: String) -> String in
             // We interpret 'add' in string matching to mean "place a copy of content
             // before every occurence of the address".
             // if the address isn't found in the string, we don't care.
             container.prefixing(address, with: content)
         },
+        
         removed: { (container: String, address: String) in
             container.replacingOccurrences(of: address, with: "")
         },
