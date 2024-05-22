@@ -90,12 +90,54 @@ extension PatchouliCoreTests {
         XCTAssertEqual(try patchedContent.reduced(), "one")
     }
 
-    func test_stringReducer_deleteWorks() throws {
+    // TODO use the reduce+reduced 2 in 1 helper (core)
+    func test_stringReducer_addWorks() throws {
+
+        let patchedContent: PatchedString = Content("prestidigitation") {
+            Add(address: "digitation", simpleContent: "FOO")
+        }
+        XCTAssertEqual(try patchedContent.reduced(), "prestiFOOdigitation")
+    }
+
+    func test_stringReducer_addWorksWithMultipleMatches() throws {
+
+        let patchedContent: PatchedString = Content("prestidigitation") {
+            Add(address: "t", simpleContent: "_")
+        }
+        XCTAssertEqual(try patchedContent.reduced(), "pres_tidigi_ta_tion")
+    }
+
+    // TODO use the reduce+reduced 2 in 1 helper (core)
+    func test_stringReducer_removeWorks() throws {
 
         let patchedContent: PatchedString = Content("prestidigitation") {
             Remove(address: "digitation")
         }
         XCTAssertEqual(try patchedContent.reduced(), "presti")
+    }
+
+    func test_stringReducer_removeWorksWithMultipleMatches() throws {
+
+        let patchedContent: PatchedString = Content("prestidigitation rest prestidigitation") {
+            Remove(address: "rest")
+        }
+        XCTAssertEqual(try patchedContent.reduced(), "pidigitation  pidigitation")
+    }
+
+    func test_stringReducer_moveWorksFromMultiToSingle() throws {
+
+        let patchedContent: PatchedString = Content("repetitive") {
+            Move(fromAddress: "ti", toAddress: "re")
+        }
+        XCTAssertEqual(try patchedContent.reduced(), "tipeve")
+    }
+
+    func test_stringReducer_moveWorksWithMultipleMatches() throws {
+
+        let patchedContent: PatchedString = Content("prestidigitation rest prestidigitation") {
+            Remove(address: "rest")
+        }
+        XCTAssertEqual(try patchedContent.reduced(), "pidigitation  pidigitation")
     }
 
     // MARK: - Strict order of reducer application
@@ -129,7 +171,7 @@ extension PatchouliCoreTests {
         let noReplaceFunctionPatcher = StringPatchType.testingPatcher(nilReplacedFunc: true)
 
         XCTAssertThrowsError(try patchedContent.reduced(noReplaceFunctionPatcher)) { error in
-            guard case PatchouliError<StringPatchType>.witnessMissingReplaceFunction = error else {
+            guard case PatchouliError<StringPatchType>.mutatingReplaceNotSupported = error else {
                 XCTFail("Didn't get expected replace missing error: got \(error)")
                 return
             }
@@ -152,13 +194,14 @@ extension PatchouliCoreTests {
         let noDeletedFunctionPatcher = StringPatchType.testingPatcher(nilRemovedFunc: true)
 
         XCTAssertThrowsError(try patchedContent.reduced(noDeletedFunctionPatcher)) { error in
-            guard case PatchouliError<StringPatchType>.witnessMissingRemoveFunction = error else {
+            guard case PatchouliError<StringPatchType>.mutatingRemoveNotSupported = error else {
                 XCTFail("Didn't get expected replace missing error: got \(error)")
                 return
             }
         }
     }
 
+    // ... and do same for copy, move which legit don't have funcs added
     func test_stringReducer_missingAddedFunctionThrowsError() throws {
 
         let patchedContent: PatchedString = Content("one") {
@@ -171,7 +214,7 @@ extension PatchouliCoreTests {
         let noAddFunctionPatcher = StringPatchType.testingPatcher(nilAddedFunc: true)
 
         XCTAssertThrowsError(try patchedContent.reduced(noAddFunctionPatcher)) { error in
-            guard case PatchouliError<StringPatchType>.witnessMissingAddedFunction = error else {
+            guard case PatchouliError<StringPatchType>.mutatingAddNotSupported = error else {
                 XCTFail("Didn't get expected replace missing error: got \(error)")
                 return
             }

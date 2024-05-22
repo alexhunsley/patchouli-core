@@ -3,15 +3,16 @@
 
 // open or final?
 
+/// Note that for clarity, we name errors e,g. 'mutatingAdd...' and not 'added...'
 public enum PatchouliError<T: PatchType>: Error {
-    // TODO remove 'witness' from these messages? It's an impl detail
-    // a user probably doesn't care about
-    case witnessMissingReplaceFunction
-    case witnessMissingAddedFunction
-    case witnessMissingMovedFunction
-    case witnessMissingRemoveFunction
-    case witnessMissingTestFunction
-    case witnessMissingMutatingReduceFunction
+    case mutatingReplaceNotSupported
+    case mutatingAddNotSupported
+    case mutatingMoveNotSupported
+    case mutatingRemoveNotSupported
+    // NB 'test' doesn't alter the source content,
+    // so it is called 'test' in both mutating and non-mutating worlds
+    case testNotSupported
+    case mutatingReduceNotSupported
 
     case testFailed(T.AddressType)
 }

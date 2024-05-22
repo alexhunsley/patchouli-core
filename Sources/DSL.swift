@@ -13,6 +13,24 @@
 //     But don't want to make this too complicated.
 //
 
+// [ ] Add tip on writing your own patcher - typically, what to do in what order.
+// [ ] Add advice to readme about having your own pass-along DSL. Reasons:
+//       1. Can remove actions your patcher might not support; kinder
+//          for user to not be able to find a function than to get
+//          a runtime error when they call reduce() (BUT the error
+//          does tell them that it's not supported)
+//       2. A pass-along DSL can rename some params to be nicer for
+//          the domain. For example, JSON Patch would use param label 'path: '
+//          instead of 'address: '
+//
+// [ ] Add readme section at end on 'lessons learned/thoughts' etc:
+//        e.g. "this sounds like a simple thing but size of project was
+//        ideal for provoking some interesting decision making, and touching
+//        on some nice things like Protocol Witnesses (maybe mention the initial
+//        attempt with protocols that just got a bit... foamy; then the clarity
+//        of going with PWs.)
+//
+
 // MARK: - Result builder
 import Foundation
 

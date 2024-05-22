@@ -18,7 +18,6 @@ public struct StringPatchType: PatchType {
             // if the address isn't found in the string, we don't care.
             container.prefixing(address, with: content)
         },
-        
         removed: { (container: String, address: String) in
             container.replacingOccurrences(of: address, with: "")
         },
@@ -27,8 +26,14 @@ public struct StringPatchType: PatchType {
             // But that’s expected for a content-based Address
             container.replacingOccurrences(of: address, with: replacement)
         },
-        // 'copied' doesn't really make sense.
-        // 'moved' doesn't really make sense.
+        // 'copied' doesn't really make sense, so omitted
+        //    copied: {
+        moved: { (container: String, fromAddress: String, toAddress: String) -> String in
+            container
+                // the order here is crucial
+                .replacingOccurrences(of: fromAddress, with: "")
+                .replacingOccurrences(of: toAddress, with: fromAddress)
+        },
         test: { (container: String, address: String) in
             container.contains(address)
         }

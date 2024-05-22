@@ -6,6 +6,8 @@ import Foundation
 public extension PatchedContent {
 
     /// Convenience that calls reduce using the patchable for the PatchType (i.e. T)
+    /// TODO  ~~~this could actually be a calculated property (no params to give). Is that wise tho'?~~~
+    ///     --- no, it throws, so must be a func.
     func reduced() throws -> T.ContentType {
         try reduced(T.patcher)
     }
@@ -24,26 +26,26 @@ public extension PatchedContent {
 
             case let .add(address):
                 if let newContent = try targetContent?.reduced(patcher) {
-                    guard let added = patcher.added else { throw PatchouliError<T>.witnessMissingAddedFunction }
+                    guard let added = patcher.added else { throw PatchouliError<T>.mutatingAddNotSupported }
                     accumulatedReduceResult = added(accumulatedReduceResult, newContent, address)
                 }
 
             case let .replace(address):
                 if let newContent = try targetContent?.reduced(patcher) {
-                    guard let replaced = patcher.replaced else { throw PatchouliError<T>.witnessMissingReplaceFunction }
+                    guard let replaced = patcher.replaced else { throw PatchouliError<T>.mutatingReplaceNotSupported }
                     accumulatedReduceResult = replaced(accumulatedReduceResult, newContent, address)
                 }
 
             case let .move(fromAddress, toAddress):
-                guard let moved = patcher.moved else { throw PatchouliError<T>.witnessMissingMovedFunction }
+                guard let moved = patcher.moved else { throw PatchouliError<T>.mutatingMoveNotSupported }
                 accumulatedReduceResult = moved(accumulatedReduceResult, fromAddress, toAddress)
 
             case let .delete(address):
-                guard let removed = patcher.removed else { throw PatchouliError<T>.witnessMissingRemoveFunction }
+                guard let removed = patcher.removed else { throw PatchouliError<T>.mutatingRemoveNotSupported }
                 accumulatedReduceResult = removed(accumulatedReduceResult, address)
 
             case let .test(address):
-                guard let test = patcher.test else { throw PatchouliError<T>.witnessMissingTestFunction }
+                guard let test = patcher.test else { throw PatchouliError<T>.testNotSupported }
                 if !test(accumulatedReduceResult, address) { throw PatchouliError<T>.testFailed(address) }
 
             case .empty:
@@ -56,7 +58,7 @@ public extension PatchedContent {
     /// Convenience that calls reduce using the mutating patchable for the PatchType (i.e. T)
     mutating func reduce() throws -> Void {
         guard let mutatingPatcher = T.mutatingPatcher else {
-            throw PatchouliError<T>.witnessMissingMutatingReduceFunction
+            throw PatchouliError<T>.mutatingReduceNotSupported
         }
         try reduce(mutatingPatcher)
     }
@@ -75,7 +77,7 @@ public extension PatchedContent {
 
             case let .replace(address):
                 try targetContent.reduce(patcher)
-                guard let replace = patcher.replace else { throw PatchouliError<T>.witnessMissingReplaceFunction }
+                guard let replace = patcher.replace else { throw PatchouliError<T>.mutatingReplaceNotSupported }
                 replace(&content, targetContent.content, address)
 
             default:

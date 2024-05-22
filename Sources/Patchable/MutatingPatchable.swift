@@ -13,8 +13,11 @@ public struct MutatingPatchable<T: PatchType> {
     public typealias C = T.ContentType
     public typealias A = T.AddressType
 
+    // TODO would C A C make more sense? feels like it.
+    // But I did C C A for the... ordering of them? Not sure important tho.
     public typealias AddHandler = @Sendable (inout C, C, A) -> Void
     public typealias RemoveHandler = @Sendable (inout C, A) -> Void
+    // TODO would C A C make more sense? feels like it.
     public typealias ReplaceHandler = @Sendable (inout C, C, A) -> Void
     public typealias CopyHandler = @Sendable (inout C, A, A) -> Void
     public typealias MoveHandler = @Sendable (inout C, A, A) -> Void
