@@ -34,26 +34,43 @@ public struct StringPatchType: PatchType {
                 .replacingOccurrences(of: fromAddress, with: "")
                 .replacingOccurrences(of: toAddress, with: fromAddress)
         },
-        test: { (container: String, address: String) in
+        // we don't care about the expectedContent, it's just the address for this string patcher
+        test: { (container: String, _: String, address: String) in
             container.contains(address)
         }
         // Note that we provide no 'move' implementation as it has no obvious meaning for string matching
     )
 
     public static var mutatingPatcher: MutatingPatchable<StringPatchType>? = .init(
-        added: { (container: inout String, address: String, content: String) in
+        add: { (container: inout String, address: String, content: String) in
             // We interpret 'add' in string matching to mean "place a copy of content
             // before every occurence of the address".
             // if the address isn't found in the string, we don't care.
+            //
+            // Value types like strings can't actually be
+            // mutated in-place so this is as close as we get:
+            // assigning. Same end result as far as caller who
+            // passes us the inout param, though.
             container = container.prefixing(address, with: content)
         },
-        removed: { (container: inout String, address: String) in
+        remove: { (container: inout String, address: String) in
             container = container.replacingOccurrences(of: address, with: "")
         },
         replace: { (container: inout String, replacement: String, address: String) in
             container = container.replacingOccurrences(of: address, with: replacement)
+        },
+        // 'copied' doesn't really make sense, so omitted
+        //    copied: {
+        move: { (container: inout String, fromAddress: String, toAddress: String) in
+            container = container
+                // the order here is crucial
+                .replacingOccurrences(of: fromAddress, with: "")
+                .replacingOccurrences(of: toAddress, with: fromAddress)
+        },
+        // NB lasdt param not used for strings as doesn't make sense
+        test: { (container: String, expectedContent: String, address: String) -> Bool in
+//        expectedContentDummy: String) -> Bool in
+            container.contains(address)
         }
-        // 'copy' doesn't really make sense.
-        // 'move' doesn't really make sense.
     )
 }

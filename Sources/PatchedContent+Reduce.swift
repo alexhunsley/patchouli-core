@@ -44,9 +44,11 @@ public extension PatchedContent {
                 guard let removed = patcher.removed else { throw PatchouliError<T>.mutatingRemoveNotSupported }
                 accumulatedReduceResult = removed(accumulatedReduceResult, address)
 
-            case let .test(address):
+            case let .test(expectedContent, address):
                 guard let test = patcher.test else { throw PatchouliError<T>.testNotSupported }
-                if !test(accumulatedReduceResult, address) { throw PatchouliError<T>.testFailed(address) }
+                if !test(accumulatedReduceResult, expectedContent, address) {
+                    throw PatchouliError<T>.testFailed(accumulatedReduceResult, address, expectedContent)
+                }
 
             case .empty:
                 break

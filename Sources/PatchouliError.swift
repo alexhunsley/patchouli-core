@@ -14,5 +14,5 @@ public enum PatchouliError<T: PatchType>: Error {
     case testNotSupported
     case mutatingReduceNotSupported
 
-    case testFailed(T.AddressType)
+    case testFailed(T.ContentType, T.AddressType, T.ContentType)
 }

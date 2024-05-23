@@ -155,6 +155,21 @@ extension PatchouliCoreTests {
         XCTAssertEqual(try patchedContent.reduced(), "tipeve tip")
     }
 
+
+
+    func test_stringReducer_testWorks() throws {
+
+        let patchedContent: PatchedString = Content("repetitive rep") {
+            // NB it's only using the expected content here! not the address.
+            Test(expectedContent: "titive")
+            Test(expectedContent: "it")
+            Test(expectedContent: "p")
+            Add(address: "rep", simpleContent: "rap")
+            Test(expectedContent: "raprep")
+        }
+        XCTAssertNoThrow(try patchedContent.reduced())
+    }
+
     // MARK: - Strict order of reducer application
 
     func test_stringReducer_SubsequentPatchSeesPreviousPatchResult() throws {
@@ -238,20 +253,19 @@ extension PatchouliCoreTests {
 
     func test_stringReducer_failingTestThrowsError() throws {
 
-        let horseAddress = "horse"
+        let horseContent = "horse"
 
         let patchedContent: PatchedString = Content("one three") {
             // test a non-existent address
-            Test(address: horseAddress)
+            Test(expectedContent: horseContent)
         }
 
-        // TODO make the reduce func be default on the patchType? Hence locate it in the patchType...
-        XCTAssertThrowsError(try patchedContent.reduced()) { error in
-            guard case let PatchouliError<StringPatchType>.testFailed(address) = error else {
-                XCTFail("Didn't get expected replace missing error: got \(error)")
-                return
-            }
-            XCTAssertEqual(address, horseAddress, "Expected \(horseAddress) in .testFailed() error but got \"\(address)\"")
+        do {
+            let reduced = try patchedContent.reduced()
+            XCTFail("Expected to throw error when looking for '\(horseContent)' in the content '\(reduced)'")
+        }
+        catch {
+            // we expect an error
         }
     }
 
@@ -260,8 +274,8 @@ extension PatchouliCoreTests {
             // magic sauce to get type inference going!
             // https://stackoverflow.com/q/67951741/348476
 
-            // test an existing address
-            Test(address: "three")
+            Test(expectedContent: "three")
+            Test(expectedContent: "ne th")
         }
         // we expect this to not throw
         _ = try patchedContent.reduced()

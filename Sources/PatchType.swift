@@ -52,12 +52,13 @@ public struct DummyPatchType: PatchType {
 /// This generic PatchSpec's design is based on JSONPatch's operations.
 public enum PatchSpec<T: PatchType> {
     public typealias A = T.AddressType
+    public typealias C = T.ContentType
 
     case add(A)
     case replace(A)
     case move(A, A)
     case delete(A)
-    case test(A)
+    case test(C, A)
 
     // helper for handling optional entries in patch list
     case empty

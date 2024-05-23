@@ -165,9 +165,9 @@ public func Replace<T: PatchType>(address: T.AddressType,
                                   @AddressedPatchItemsBuilder<T> patchedBy patchItems: PatchListProducer<T> = { AddressedPatch.emptyPatchList })
         -> AddressedPatch<T> {
 
-            Replace(address: address,
-                    withContent: PatchedContent(content: simpleContent,
-                                                contentPatches: patchItems()))
+    Replace(address: address,
+            withContent: PatchedContent(content: simpleContent,
+                                        contentPatches: patchItems()))
 }
 
 // MARK: Copy
@@ -176,7 +176,7 @@ public func Copy<T: PatchType>(fromAddress: T.AddressType,
                                toAddress: T.AddressType)
         -> AddressedPatch<T> {
 
-    return AddressedPatch(patchSpec: .move(fromAddress, toAddress))
+    AddressedPatch(patchSpec: .move(fromAddress, toAddress))
 }
 
 // MARK: Move
@@ -185,15 +185,16 @@ public func Move<T: PatchType>(fromAddress: T.AddressType,
                                toAddress: T.AddressType)
         -> AddressedPatch<T> {
 
-    return AddressedPatch(patchSpec: .move(fromAddress, toAddress))
+    AddressedPatch(patchSpec: .move(fromAddress, toAddress))
 }
 
 // MARK: Test
 
+// TODO allow patched content for the expecfted content?
 public func Test<T: PatchType>(address: T.AddressType,
-                               content: PatchedContent<T>? = nil)
+                               expectedContent: T.ContentType)
         -> AddressedPatch<T> {
 
-    AddressedPatch(patchSpec: .test(address),
-                   contentPatch: content)
+    AddressedPatch(patchSpec: .test(expectedContent, address),
+                   contentPatch: PatchedContent(content: expectedContent))
 }

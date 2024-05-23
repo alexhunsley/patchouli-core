@@ -1,14 +1,14 @@
 import Foundation
 
-// The notocol ('not a protocol') for our in-place patcher protocol witnesses.
-// Note the gerund style name ('-ing', '-able', etc) -- when we see this on
-// a struct, this is a hint that it's a notocol.
-//
-// Protocol witness instantiations of this type should lose the
-// gerund style and be named e.g. 'mutablePatcher'.
-//
-// (Practically, I wanted to name this struct `PatchableInPlace` (for code completion etc),
-// but linguistically and semantically, mutatingPatchable is the correct name.)
+/// The notocol ('not a protocol') for our in-place patcher protocol witnesses.
+/// Note the gerund style name ('-ing', '-able', etc) -- when we see this on
+/// a struct, this is a hint that it's a notocol.
+///
+/// Protocol witness instantiations of this type should lose the
+/// gerund style and be named e.g. 'mutablePatcher'.
+///
+/// (Practically, I wanted to name this struct `PatchableInPlace` (for code completion etc),
+/// but linguistically and semantically, mutatingPatchable is the correct name.)
 public struct MutatingPatchable<T: PatchType> {
     public typealias C = T.ContentType
     public typealias A = T.AddressType
@@ -21,7 +21,7 @@ public struct MutatingPatchable<T: PatchType> {
     public typealias ReplaceHandler = @Sendable (inout C, C, A) -> Void
     public typealias CopyHandler = @Sendable (inout C, A, A) -> Void
     public typealias MoveHandler = @Sendable (inout C, A, A) -> Void
-    public typealias TestHandler = @Sendable (inout C, A) -> Bool
+    public typealias TestHandler = @Sendable (C, C, A) -> Bool
 
     public let add: AddHandler?
     public let remove: RemoveHandler?
@@ -33,18 +33,18 @@ public struct MutatingPatchable<T: PatchType> {
     // (would be wrapped in the Patchouli 'test failed' error)
     public let test: TestHandler?
 
-    public init(added: AddHandler? = nil,
-                removed: RemoveHandler? = nil,
+    public init(add: AddHandler? = nil,
+                remove: RemoveHandler? = nil,
                 replace: ReplaceHandler? = nil,
-                copied: CopyHandler? = nil,
-                moved: MoveHandler? = nil,
+                copy: CopyHandler? = nil,
+                move: MoveHandler? = nil,
                 test: TestHandler? = nil) {
 
-        self.add = added
-        self.remove = removed
+        self.add = add
+        self.remove = remove
         self.replace = replace
-        self.copy = copied
-        self.move = moved
+        self.copy = copy
+        self.move = move
         self.test = test
     }
 }

@@ -1,11 +1,11 @@
 import Foundation
 
-// The notocol ('not a protocol') for our patcher protocol witnesses.
-// Note the gerund style name ('-ing', '-able', etc) -- when we see this on
-// a struct, this is a hint that it's a notocol.
-//
-// Protocol witness instantiations of this type should lose the
-// gerund style and be named e.g. 'patcher'.
+/// The notocol ('not a protocol') for our patcher protocol witnesses.
+/// Note the gerund style name ('-ing', '-able', etc) -- when we see this on
+/// a struct, this is a hint that it's a notocol.
+///
+/// Protocol witness instantiations of this type should lose the
+/// gerund style and be named e.g. 'patcher'.
 public struct Patchable<T: PatchType> {
     public typealias C = T.ContentType
     public typealias A = T.AddressType
@@ -15,7 +15,7 @@ public struct Patchable<T: PatchType> {
     public typealias ReplacedHandler = @Sendable (C, C, A) -> C
     public typealias CopiedHandler = @Sendable (C, A, A) -> C
     public typealias MovedHandler = @Sendable (C, A, A) -> C
-    public typealias TestHandler = @Sendable (C, A) -> Bool
+    public typealias TestHandler = @Sendable (C, C, A) -> Bool
 
     public let added: AddedHandler?
     public let removed: RemovedHandler?
