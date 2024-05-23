@@ -83,13 +83,11 @@ extension PatchouliCoreTests {
         try patchedContent.testReducers(expectedContent: "one")
     }
 
-    // TODO use the reduce+reduced 2 in 1 helper (core)
     func test_stringReducer_addWorks() throws {
 
         let patchedContent: PatchedString = Content("prestidigitation") {
             Add(address: "digitation", simpleContent: "FOO")
         }
-        // So how does Add work? It also mutates.
         try patchedContent.testReducers(expectedContent: "prestiFOOdigitation")
     }
 
@@ -101,7 +99,6 @@ extension PatchouliCoreTests {
         try patchedContent.testReducers(expectedContent: "pres_tidigi_ta_tion")
     }
 
-//    // TODO use the reduce+reduced 2 in 1 helper (core)
     func test_stringReducer_removeWorks() throws {
 
         let patchedContent: PatchedString = Content("prestidigitation") {
@@ -110,9 +107,6 @@ extension PatchouliCoreTests {
         try patchedContent.testReducers(expectedContent: "presti")
     }
 
-    // I don't think it;s the inout/reduce stuff that's the issue,
-    // because other actions like add, they mutate too and it works!
-    // It's how I've done Remove, there's a mistake somewhere. e.g. Add works fine.
     func test_stringReducer_removeWorksWithMultipleMatches() throws {
 
         let patchedContent: PatchedString = Content("prestidigitation rest prestidigitation") {
