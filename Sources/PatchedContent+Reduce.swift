@@ -77,6 +77,12 @@ public extension PatchedContent {
 
             switch item.patchSpec {
 
+            // TODO other actions!
+            case let .add(address):
+                try targetContent.reduce(patcher) // FOO, the content we will add
+                guard let add = patcher.add else { throw PatchouliError<T>.mutatingAddNotSupported }
+                add(&content, targetContent.content, address)
+
             case let .replace(address):
                 try targetContent.reduce(patcher)
                 guard let replace = patcher.replace else { throw PatchouliError<T>.mutatingReplaceNotSupported }

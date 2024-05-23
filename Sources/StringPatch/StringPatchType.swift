@@ -42,7 +42,7 @@ public struct StringPatchType: PatchType {
     )
 
     public static var mutatingPatcher: MutatingPatchable<StringPatchType>? = .init(
-        add: { (container: inout String, address: String, content: String) in
+        add: { (container: inout String, content: String, address: String) in
             // We interpret 'add' in string matching to mean "place a copy of content
             // before every occurence of the address".
             // if the address isn't found in the string, we don't care.
@@ -51,7 +51,7 @@ public struct StringPatchType: PatchType {
             // mutated in-place so this is as close as we get:
             // assigning. Same end result as far as caller who
             // passes us the inout param, though.
-            container = container.prefixing(address, with: content)
+            container = container.prefixing(address, with: content) // content, new content, address
         },
         remove: { (container: inout String, address: String) in
             container = container.replacingOccurrences(of: address, with: "")

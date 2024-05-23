@@ -61,11 +61,12 @@ extension PatchedContent { // where T.ContentType: Equatable {
         // mutating reduce() func
 
         // but what if a class? hmm.
-        var patchContentCopy = self
+        var mutableContentCopy = self
 //        let originalPatchContentCopy = patchContentCopy
-        try patchContentCopy.reduce()
+        try mutableContentCopy.reduce()
 
-        XCTAssertEqual(patchContentCopy.content, expectedContent,
+        // "prestidigitation") is not equal to ("prestiFOOdigitation")
+        XCTAssertEqual(mutableContentCopy.content, expectedContent,
                        "Didn't get expected content from reduce() (i.e. mutating reducer) in \(callingFunc)")
 
         // hmm exact form?
