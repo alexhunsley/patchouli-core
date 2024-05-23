@@ -93,14 +93,14 @@ extension PatchouliCoreTests {
         try patchedContent.testReducers(expectedContent: "prestiFOOdigitation")
     }
 
-//    func test_stringReducer_addWorksWithMultipleMatches() throws {
-//
-//        let patchedContent: PatchedString = Content("prestidigitation") {
-//            Add(address: "t", simpleContent: "_")
-//        }
-//        try patchedContent.testReducers(expectedContent: "pres_tidigi_ta_tion")
-//    }
-//
+    func test_stringReducer_addWorksWithMultipleMatches() throws {
+
+        let patchedContent: PatchedString = Content("prestidigitation") {
+            Add(address: "t", simpleContent: "_")
+        }
+        try patchedContent.testReducers(expectedContent: "pres_tidigi_ta_tion")
+    }
+
 //    // TODO use the reduce+reduced 2 in 1 helper (core)
     func test_stringReducer_removeWorks() throws {
 
@@ -118,18 +118,16 @@ extension PatchouliCoreTests {
         let patchedContent: PatchedString = Content("prestidigitation rest prestidigitation") {
             Remove(address: "rest")
         }
-//        ("prestidigitation rest prestidigitation") is not equal to ("pidigitation  pidigitation")
-
         try patchedContent.testReducers(expectedContent: "pidigitation  pidigitation")
     }
 
-//    func test_stringReducer_moveWorksFromSingleToSingle() throws {
-//
-//        let patchedContent: PatchedString = Content("repetitiv_horse_e") {
-//            Move(fromAddress: "pet", toAddress: "_horse_")
-//        }
-//        try patchedContent.testReducers(expectedContent: "reitivpete")
-//    }
+    func test_stringReducer_moveWorksFromSingleToSingle() throws {
+
+        let patchedContent: PatchedString = Content("repetitiv_horse_e") {
+            Move(fromAddress: "pet", toAddress: "_horse_")
+        }
+        try patchedContent.testReducers(expectedContent: "reitivpete")
+    }
 
     func test_stringReducer_moveWorksFromMultiToSingle() throws {
 
@@ -152,10 +150,8 @@ extension PatchouliCoreTests {
         let patchedContent: PatchedString = Content("repetitive rep") {
             Move(fromAddress: "ti", toAddress: "re")
         }
-        XCTAssertEqual(try patchedContent.reduced(), "tipeve tip")
+        try patchedContent.testReducers(expectedContent: "tipeve tip")
     }
-
-
 
     func test_stringReducer_testWorks() throws {
 
@@ -167,7 +163,7 @@ extension PatchouliCoreTests {
             Add(address: "rep", simpleContent: "rap")
             Test(expectedContent: "raprep")
         }
-        XCTAssertNoThrow(try patchedContent.reduced())
+        patchedContent.assertReducersDoNotThrow()
     }
 
     // MARK: - Strict order of reducer application
@@ -178,7 +174,7 @@ extension PatchouliCoreTests {
             Replace(address: "one", with: "hello")
             Replace(address: "hello", with: "bye")
         }
-        XCTAssertEqual(try patchedContent.reduced(), "bye")
+        try patchedContent.testReducers(expectedContent: "bye")
     }
 
     func test_stringReducer_PatchDoesNotSeesNextPatchResult() throws {
@@ -187,7 +183,7 @@ extension PatchouliCoreTests {
             Replace(address: "hello", with: "bye")
             Replace(address: "one", with: "hello")
         }
-        XCTAssertEqual(try patchedContent.reduced(), "hello")
+        try patchedContent.testReducers(expectedContent: "hello")
     }
 
     // MARK: - Missing reducer funcs throw errors
@@ -265,7 +261,7 @@ extension PatchouliCoreTests {
             XCTFail("Expected to throw error when looking for '\(horseContent)' in the content '\(reduced)'")
         }
         catch {
-            // we expect an error
+            // we expect an error, do nothing
         }
     }
 
@@ -277,7 +273,6 @@ extension PatchouliCoreTests {
             Test(expectedContent: "three")
             Test(expectedContent: "ne th")
         }
-        // we expect this to not throw
-        _ = try patchedContent.reduced()
+        patchedContent.assertReducersDoNotThrow()
     }
 }

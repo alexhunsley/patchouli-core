@@ -78,4 +78,10 @@ extension PatchedContent { // where T.ContentType: Equatable {
 //                           "MutatablePatchable returned something that was referentially unequal to start content")
 //        }
     }
+
+    func assertReducersDoNotThrow() {
+        var mutableCopy = self
+        XCTAssertNoThrow(try mutableCopy.reduced())
+        XCTAssertNoThrow(try mutableCopy.reduce())
+    }
 }
