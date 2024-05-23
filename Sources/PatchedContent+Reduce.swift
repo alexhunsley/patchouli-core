@@ -26,26 +26,26 @@ public extension PatchedContent {
 
             case let .add(address):
                 if let newContent = try targetContent?.reduced(patcher) {
-                    guard let added = patcher.added else { throw PatchouliError<T>.mutatingAddNotSupported }
+                    guard let added = patcher.added else { throw PatchouliError<T>.addNotSupported }
                     accumulatedReduceResult = added(accumulatedReduceResult, newContent, address)
                 }
 
             case let .remove(address):
-                guard let removed = patcher.removed else { throw PatchouliError<T>.mutatingRemoveNotSupported }
+                guard let removed = patcher.removed else { throw PatchouliError<T>.removeNotSupported }
                 accumulatedReduceResult = removed(accumulatedReduceResult, address)
 
             case let .replace(address):
                 if let newContent = try targetContent?.reduced(patcher) {
-                    guard let replaced = patcher.replaced else { throw PatchouliError<T>.mutatingReplaceNotSupported }
+                    guard let replaced = patcher.replaced else { throw PatchouliError<T>.replaceNotSupported }
                     accumulatedReduceResult = replaced(accumulatedReduceResult, newContent, address)
                 }
 
             case let .copy(fromAddress, toAddress):
-                guard let copied = patcher.copied else { throw PatchouliError<T>.mutatingCopyNotSupported }
+                guard let copied = patcher.copied else { throw PatchouliError<T>.copyNotSupported }
                 accumulatedReduceResult = copied(accumulatedReduceResult, fromAddress, toAddress)
 
             case let .move(fromAddress, toAddress):
-                guard let moved = patcher.moved else { throw PatchouliError<T>.mutatingMoveNotSupported }
+                guard let moved = patcher.moved else { throw PatchouliError<T>.moveNotSupported }
                 accumulatedReduceResult = moved(accumulatedReduceResult, fromAddress, toAddress)
 
             case let .test(expectedContent, address):
@@ -114,6 +114,11 @@ public extension PatchedContent {
                 guard let move = patcher.move else { throw PatchouliError<T>.mutatingMoveNotSupported }
                 move(&content, fromAddress, toAddress)
 
+            case let .test(expectedContent, address):
+                guard let test = patcher.test else { throw PatchouliError<T>.testNotSupported }
+                if !test(content, expectedContent, address) {
+                    throw PatchouliError<T>.testFailed(content, address, expectedContent)
+                }
 
             default:
                 break

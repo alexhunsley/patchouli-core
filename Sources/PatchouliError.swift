@@ -10,6 +10,11 @@ public enum PatchouliError<T: PatchType>: Error {
     case mutatingReplaceNotSupported
     case mutatingMoveNotSupported
     case mutatingCopyNotSupported
+    case addNotSupported
+    case removeNotSupported
+    case replaceNotSupported
+    case moveNotSupported
+    case copyNotSupported
     // NB 'test' doesn't alter the source content,
     // so it is called 'test' in both mutating and non-mutating worlds
     case testNotSupported

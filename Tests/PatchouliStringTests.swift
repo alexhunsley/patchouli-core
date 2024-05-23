@@ -191,7 +191,7 @@ extension PatchouliCoreTests {
         let noReplaceFunctionPatcher = StringPatchType.testingPatcher(nilReplacedFunc: true)
 
         XCTAssertThrowsError(try patchedContent.reduced(noReplaceFunctionPatcher)) { error in
-            guard case PatchouliError<StringPatchType>.mutatingReplaceNotSupported = error else {
+            guard case PatchouliError<StringPatchType>.replaceNotSupported = error else {
                 XCTFail("Didn't get expected replace missing error: got \(error)")
                 return
             }
@@ -214,7 +214,7 @@ extension PatchouliCoreTests {
         let noRemovedFunctionPatcher = StringPatchType.testingPatcher(nilRemovedFunc: true)
 
         XCTAssertThrowsError(try patchedContent.reduced(noRemovedFunctionPatcher)) { error in
-            guard case PatchouliError<StringPatchType>.mutatingRemoveNotSupported = error else {
+            guard case PatchouliError<StringPatchType>.removeNotSupported = error else {
                 XCTFail("Didn't get expected removed missing error: got \(error)")
                 return
             }
@@ -234,7 +234,7 @@ extension PatchouliCoreTests {
         let noAddFunctionPatcher = StringPatchType.testingPatcher(nilAddedFunc: true)
 
         XCTAssertThrowsError(try patchedContent.reduced(noAddFunctionPatcher)) { error in
-            guard case PatchouliError<StringPatchType>.mutatingAddNotSupported = error else {
+            guard case PatchouliError<StringPatchType>.addNotSupported = error else {
                 XCTFail("Didn't get expected replace missing error: got \(error)")
                 return
             }
