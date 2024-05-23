@@ -5,10 +5,11 @@
 
 /// Note that for clarity, we name errors e,g. 'mutatingAdd...' and not 'added...'
 public enum PatchouliError<T: PatchType>: Error {
-    case mutatingReplaceNotSupported
     case mutatingAddNotSupported
-    case mutatingMoveNotSupported
     case mutatingRemoveNotSupported
+    case mutatingReplaceNotSupported
+    case mutatingMoveNotSupported
+    case mutatingCopyNotSupported
     // NB 'test' doesn't alter the source content,
     // so it is called 'test' in both mutating and non-mutating worlds
     case testNotSupported

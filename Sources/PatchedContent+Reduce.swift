@@ -30,19 +30,23 @@ public extension PatchedContent {
                     accumulatedReduceResult = added(accumulatedReduceResult, newContent, address)
                 }
 
+            case let .remove(address):
+                guard let removed = patcher.removed else { throw PatchouliError<T>.mutatingRemoveNotSupported }
+                accumulatedReduceResult = removed(accumulatedReduceResult, address)
+
             case let .replace(address):
                 if let newContent = try targetContent?.reduced(patcher) {
                     guard let replaced = patcher.replaced else { throw PatchouliError<T>.mutatingReplaceNotSupported }
                     accumulatedReduceResult = replaced(accumulatedReduceResult, newContent, address)
                 }
 
+            case let .copy(fromAddress, toAddress):
+                guard let copied = patcher.copied else { throw PatchouliError<T>.mutatingCopyNotSupported }
+                accumulatedReduceResult = copied(accumulatedReduceResult, fromAddress, toAddress)
+
             case let .move(fromAddress, toAddress):
                 guard let moved = patcher.moved else { throw PatchouliError<T>.mutatingMoveNotSupported }
                 accumulatedReduceResult = moved(accumulatedReduceResult, fromAddress, toAddress)
-
-            case let .delete(address):
-                guard let removed = patcher.removed else { throw PatchouliError<T>.mutatingRemoveNotSupported }
-                accumulatedReduceResult = removed(accumulatedReduceResult, address)
 
             case let .test(expectedContent, address):
                 guard let test = patcher.test else { throw PatchouliError<T>.testNotSupported }
@@ -83,10 +87,21 @@ public extension PatchedContent {
                 guard let add = patcher.add else { throw PatchouliError<T>.mutatingAddNotSupported }
                 add(&content, targetContent.content, address)
 
+            case let .remove(address):
+                try targetContent.reduce(patcher)
+                guard let remove = patcher.remove else { throw PatchouliError<T>.mutatingRemoveNotSupported }
+                remove(&content, address)
+
             case let .replace(address):
                 try targetContent.reduce(patcher)
                 guard let replace = patcher.replace else { throw PatchouliError<T>.mutatingReplaceNotSupported }
                 replace(&content, targetContent.content, address)
+
+            case let .move(fromAddress, toAddress):
+                try targetContent.reduce(patcher)
+                guard let move = patcher.move else { throw PatchouliError<T>.mutatingMoveNotSupported }
+                move(&content, fromAddress, toAddress)
+
 
             default:
                 break

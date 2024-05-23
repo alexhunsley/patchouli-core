@@ -55,9 +55,10 @@ public enum PatchSpec<T: PatchType> {
     public typealias C = T.ContentType
 
     case add(A)
+    case remove(A)
     case replace(A)
+    case copy(A, A)
     case move(A, A)
-    case delete(A)
     case test(C, A)
 
     // helper for handling optional entries in patch list

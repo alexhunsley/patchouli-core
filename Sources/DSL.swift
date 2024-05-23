@@ -134,7 +134,7 @@ public func Add<T: PatchType>(address: T.AddressType,
 
 public func Remove<T: PatchType>(address: T.AddressType) -> AddressedPatch<T> {
 
-    AddressedPatch(patchSpec: .delete(address))
+    AddressedPatch(patchSpec: .remove(address))
 }
 
 // MARK: - Patch
