@@ -14,6 +14,7 @@ public enum PatchouliError<T: PatchType>: Error {
     // so it is called 'test' in both mutating and non-mutating worlds
     case testNotSupported
     case mutatingReduceNotSupported
+    case contentWasNil
 
     case testFailed(T.ContentType, T.AddressType, T.ContentType)
 }

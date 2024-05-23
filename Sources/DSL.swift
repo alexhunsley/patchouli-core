@@ -116,8 +116,8 @@ public func Add<T: PatchType>(address: T.AddressType,
                               content: PatchedContent<T>)
             -> AddressedPatch<T> {
 
-    return AddressedPatch(patchSpec: PatchSpec.add(address),
-                          contentPatch: content)
+    AddressedPatch(patchSpec: PatchSpec.add(address),
+                   contentPatch: content)
 }
 
 public func Add<T: PatchType>(address: T.AddressType,
@@ -144,8 +144,8 @@ public func Replace<T: PatchType>(address: T.AddressType,
                                   withContent content: PatchedContent<T>)
         -> AddressedPatch<T> {
 
-    return AddressedPatch(patchSpec: .replace(address),
-                          contentPatch: content)
+    AddressedPatch(patchSpec: .replace(address),
+                   contentPatch: content)
 }
 
 /// Convenience that wraps 'simpleContent' in a Content() with optional sub-patches

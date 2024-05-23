@@ -34,6 +34,7 @@ extension PatchedContent { // where T.ContentType: Equatable {
 
 
     /// Tests both reduced and reduce
+//    mutating
     func testReducers(expectedContent: T.ContentType, callingFunc: String = #function) throws where T.ContentType: Equatable {
 
         // non-mutating reduced() func
@@ -61,9 +62,11 @@ extension PatchedContent { // where T.ContentType: Equatable {
         // mutating reduce() func
 
         // but what if a class? hmm.
+
+        // we make a copy here so we don't have to mark this method as mutating
         var mutableContentCopy = self
-//        let originalPatchContentCopy = patchContentCopy
         try mutableContentCopy.reduce()
+//        try reduce()
 
         // "prestidigitation") is not equal to ("prestiFOOdigitation")
         XCTAssertEqual(mutableContentCopy.content, expectedContent,

@@ -89,6 +89,7 @@ extension PatchouliCoreTests {
         let patchedContent: PatchedString = Content("prestidigitation") {
             Add(address: "digitation", simpleContent: "FOO")
         }
+        // So how does Add work? It also mutates.
         try patchedContent.testReducers(expectedContent: "prestiFOOdigitation")
     }
 
@@ -101,36 +102,41 @@ extension PatchouliCoreTests {
 //    }
 //
 //    // TODO use the reduce+reduced 2 in 1 helper (core)
-//    func test_stringReducer_removeWorks() throws {
-//
-//        let patchedContent: PatchedString = Content("prestidigitation") {
-//            Remove(address: "digitation")
-//        }
-//        try patchedContent.testReducers(expectedContent: "presti")
-//    }
+    func test_stringReducer_removeWorks() throws {
 
+        let patchedContent: PatchedString = Content("prestidigitation") {
+            Remove(address: "digitation")
+        }
+        try patchedContent.testReducers(expectedContent: "presti")
+    }
+
+    // I don't think it;s the inout/reduce stuff that's the issue,
+    // because other actions like add, they mutate too and it works!
+    // It's how I've done Remove, there's a mistake somewhere. e.g. Add works fine.
     func test_stringReducer_removeWorksWithMultipleMatches() throws {
 
         let patchedContent: PatchedString = Content("prestidigitation rest prestidigitation") {
             Remove(address: "rest")
         }
-        XCTAssertEqual(try patchedContent.reduced(), "pidigitation  pidigitation")
+//        ("prestidigitation rest prestidigitation") is not equal to ("pidigitation  pidigitation")
+
+        try patchedContent.testReducers(expectedContent: "pidigitation  pidigitation")
     }
 
-    func test_stringReducer_moveWorksFromSingleToSingle() throws {
-
-        let patchedContent: PatchedString = Content("repetitiv_horse_e") {
-            Move(fromAddress: "pet", toAddress: "_horse_")
-        }
-        XCTAssertEqual(try patchedContent.reduced(), "reitivpete")
-    }
+//    func test_stringReducer_moveWorksFromSingleToSingle() throws {
+//
+//        let patchedContent: PatchedString = Content("repetitiv_horse_e") {
+//            Move(fromAddress: "pet", toAddress: "_horse_")
+//        }
+//        try patchedContent.testReducers(expectedContent: "reitivpete")
+//    }
 
     func test_stringReducer_moveWorksFromMultiToSingle() throws {
 
         let patchedContent: PatchedString = Content("repetitive") {
             Move(fromAddress: "ti", toAddress: "re")
         }
-        XCTAssertEqual(try patchedContent.reduced(), "tipeve")
+        try patchedContent.testReducers(expectedContent: "tipeve")
     }
 
     func test_stringReducer_moveWorksFromSingleToMulti() throws {
@@ -215,11 +221,11 @@ extension PatchouliCoreTests {
             Remove(address: "hi")
         }
 
-        let noDeletedFunctionPatcher = StringPatchType.testingPatcher(nilRemovedFunc: true)
+        let noRemovedFunctionPatcher = StringPatchType.testingPatcher(nilRemovedFunc: true)
 
-        XCTAssertThrowsError(try patchedContent.reduced(noDeletedFunctionPatcher)) { error in
+        XCTAssertThrowsError(try patchedContent.reduced(noRemovedFunctionPatcher)) { error in
             guard case PatchouliError<StringPatchType>.mutatingRemoveNotSupported = error else {
-                XCTFail("Didn't get expected replace missing error: got \(error)")
+                XCTFail("Didn't get expected removed missing error: got \(error)")
                 return
             }
         }

@@ -77,28 +77,40 @@ public extension PatchedContent {
 
         for item in contentPatches {
 
-            guard var targetContent = item.contentPatch else { return }
+            // dodo. Some actions can legitimately have no targetContent!
+//            guard var targetContent = item.contentPatch else {
+//                return
+//            }
 
             switch item.patchSpec {
 
             // TODO other actions!
             case let .add(address):
-                try targetContent.reduce(patcher) // FOO, the content we will add
+                guard var targetContent = item.contentPatch else { throw PatchouliError<T>.contentWasNil }
+
+                try targetContent.reduce(patcher)
+
                 guard let add = patcher.add else { throw PatchouliError<T>.mutatingAddNotSupported }
                 add(&content, targetContent.content, address)
 
             case let .remove(address):
-                try targetContent.reduce(patcher)
+                // there's no target content for a remove
+//                try targetContent.reduce(patcher)
                 guard let remove = patcher.remove else { throw PatchouliError<T>.mutatingRemoveNotSupported }
+                print("ALAL before remove: \(content)")
                 remove(&content, address)
+                print("ALAL after remove: \(content)")
 
             case let .replace(address):
+                guard var targetContent = item.contentPatch else { throw PatchouliError<T>.contentWasNil }
+
                 try targetContent.reduce(patcher)
+
                 guard let replace = patcher.replace else { throw PatchouliError<T>.mutatingReplaceNotSupported }
                 replace(&content, targetContent.content, address)
 
             case let .move(fromAddress, toAddress):
-                try targetContent.reduce(patcher)
+//                try targetContent.reduce(patcher)
                 guard let move = patcher.move else { throw PatchouliError<T>.mutatingMoveNotSupported }
                 move(&content, fromAddress, toAddress)
 

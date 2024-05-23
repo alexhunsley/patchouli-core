@@ -41,6 +41,7 @@ public struct StringPatchType: PatchType {
         // Note that we provide no 'move' implementation as it has no obvious meaning for string matching
     )
 
+    // TODO could use the non-mutating things above the job.
     public static var mutatingPatcher: MutatingPatchable<StringPatchType>? = .init(
         add: { (container: inout String, content: String, address: String) in
             // We interpret 'add' in string matching to mean "place a copy of content
