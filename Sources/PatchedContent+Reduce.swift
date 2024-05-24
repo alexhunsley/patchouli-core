@@ -22,11 +22,13 @@ public extension PatchedContent {
 
             let targetContent = item.contentPatch
 
+            print("Processing patch: \(item)")
             switch item.patchSpec {
 
             case let .add(address):
                 if let newContent = try targetContent?.reduced(patcher) {
                     guard let added = patcher.added else { throw PatchouliError<T>.addNotSupported }
+                    print("new content, address = \(newContent), \(address)")
                     accumulatedReduceResult = added(accumulatedReduceResult, newContent, address)
                 }
 

@@ -95,6 +95,17 @@ public struct AddressedPatchItemsBuilder<T: PatchType> {
 
 // MARK: - Content
 
+// TODO add way to load data from a file URL, e.g. json.
+// https://www.swiftbysundell.com/articles/working-with-files-and-folders-in-swift/
+//
+// maybe have bundleResource, and a direct file path? as options.
+// e.g. contentFilePath: and bundleResourceName:.
+// We want to do loading sensibly? Don't load same thing twice, cache it somehow.
+// So user can just use the two above without worrying about efficiency? hmm a bit magical...
+// but we don't want to load data from a file if it's not even used!
+// but if user declares that content ahead of time, and uses it in multiple places, it won't
+// load until actually called (and can cache).
+// Need to warn user if there's a gotcha like this.
 public func Content<T: PatchType>(_ content: T.ContentType,
                                   @AddressedPatchItemsBuilder<T> patchedBy patchItems: PatchListProducer<T> = { AddressedPatch.emptyPatchList })
         -> PatchedContent<T> {
