@@ -187,7 +187,7 @@ public func Copy<T: PatchType>(fromAddress: T.AddressType,
                                toAddress: T.AddressType)
         -> AddressedPatch<T> {
 
-    AddressedPatch(patchSpec: .move(fromAddress, toAddress))
+    AddressedPatch(patchSpec: .copy(fromAddress, toAddress))
 }
 
 // MARK: Move
