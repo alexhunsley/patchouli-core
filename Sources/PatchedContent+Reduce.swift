@@ -29,30 +29,30 @@ public extension PatchedContent {
                 if let newContent = try targetContent?.reduced(patcher) {
                     guard let added = patcher.added else { throw PatchouliError<T>.addNotSupported }
                     print("new content, address = \(newContent), \(address)")
-                    accumulatedReduceResult = added(accumulatedReduceResult, newContent, address)
+                    try accumulatedReduceResult = added(accumulatedReduceResult, newContent, address)
                 }
 
             case let .remove(address):
                 guard let removed = patcher.removed else { throw PatchouliError<T>.removeNotSupported }
-                accumulatedReduceResult = removed(accumulatedReduceResult, address)
+                try accumulatedReduceResult = removed(accumulatedReduceResult, address)
 
             case let .replace(address):
                 if let newContent = try targetContent?.reduced(patcher) {
                     guard let replaced = patcher.replaced else { throw PatchouliError<T>.replaceNotSupported }
-                    accumulatedReduceResult = replaced(accumulatedReduceResult, newContent, address)
+                    try accumulatedReduceResult = replaced(accumulatedReduceResult, newContent, address)
                 }
 
             case let .copy(fromAddress, toAddress):
                 guard let copied = patcher.copied else { throw PatchouliError<T>.copyNotSupported }
-                accumulatedReduceResult = copied(accumulatedReduceResult, fromAddress, toAddress)
+                try accumulatedReduceResult = copied(accumulatedReduceResult, fromAddress, toAddress)
 
             case let .move(fromAddress, toAddress):
                 guard let moved = patcher.moved else { throw PatchouliError<T>.moveNotSupported }
-                accumulatedReduceResult = moved(accumulatedReduceResult, fromAddress, toAddress)
+                try accumulatedReduceResult = moved(accumulatedReduceResult, fromAddress, toAddress)
 
             case let .test(expectedContent, address):
                 guard let test = patcher.test else { throw PatchouliError<T>.testNotSupported }
-                if !test(accumulatedReduceResult, expectedContent, address) {
+                if try !test(accumulatedReduceResult, expectedContent, address) {
                     throw PatchouliError<T>.testFailed(accumulatedReduceResult, address, expectedContent)
                 }
 

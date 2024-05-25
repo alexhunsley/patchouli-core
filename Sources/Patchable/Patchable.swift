@@ -10,12 +10,12 @@ public struct Patchable<T: PatchType> {
     public typealias C = T.ContentType
     public typealias A = T.AddressType
 
-    public typealias AddedHandler = @Sendable (C, C, A) -> C
-    public typealias RemovedHandler = @Sendable (C, A) -> C
-    public typealias ReplacedHandler = @Sendable (C, C, A) -> C
-    public typealias CopiedHandler = @Sendable (C, A, A) -> C
-    public typealias MovedHandler = @Sendable (C, A, A) -> C
-    public typealias TestHandler = @Sendable (C, C, A) -> Bool
+    public typealias AddedHandler = @Sendable (C, C, A) throws -> C
+    public typealias RemovedHandler = @Sendable (C, A) throws -> C
+    public typealias ReplacedHandler = @Sendable (C, C, A) throws -> C
+    public typealias CopiedHandler = @Sendable (C, A, A) throws -> C
+    public typealias MovedHandler = @Sendable (C, A, A) throws -> C
+    public typealias TestHandler = @Sendable (C, C, A) throws -> Bool
 
     public let added: AddedHandler?
     public let removed: RemovedHandler?
