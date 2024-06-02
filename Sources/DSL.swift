@@ -30,6 +30,16 @@
 //        attempt with protocols that just got a bit... foamy; then the clarity
 //        of going with PWs.)
 //
+//
+// I had the idea in the `abandon--make-json-patch-assemble-entire-patch-data-before-applying`
+// branch about gathering the json patch operations together then doing them in one go, once child
+// ops collected, to let json patch deal with the test op failing mean "don't change data" thing;
+// but it's too annoying and leaky. It would complicate the core json patch, since we'd need "final
+// applicator" once children were applied, I think.
+//
+// Calling jsonpatch once per child op seems annoying, but I think it's the right choice
+// due to the general core thing.
+
 
 // MARK: - Result builder
 import Foundation
