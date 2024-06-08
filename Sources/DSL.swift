@@ -39,6 +39,22 @@
 //
 // Calling jsonpatch once per child op seems annoying, but I think it's the right choice
 // due to the general core thing.
+//
+// 2024-06-08 further comment on above:
+//
+// Trying to use the existing reducer funcs to do the list thing is misguided I think, but:
+// If I want to do this, keep the “pure” reducer, and add a “list” reducer:
+// This comprises:
+//
+//   ([C_i], C) -> [C_i]    (Compiling a list of intermediate content type C_i, ie Data representing a single jsonpatch item)
+//
+//   (C, [C_i]) -> C   (Calling jsonpatch with list applied to parent C)
+//
+// However: is it really worth the bother? Using jsonpatch the list way will still involve it doing the patching up until
+// say a test fails — it’s not like we’re avoiding that the “nice” way! We’d just be avoiding multiple invocations to
+// jsonpatch, but it’s hardly compute intensive.
+//
+// So: maybe write up above bit on the GitHub page, but don’t implement at this point.
 
 
 // MARK: - Result builder
