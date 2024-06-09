@@ -241,22 +241,36 @@ extension PatchouliCoreTests {
         }
     }
 
-    func test_stringReducer_failingTestThrowsError() throws {
+    func test_stringReducer_ifTestSucceeds_thenPatchIsApplied() throws {
+
+        let inputString = "one three"
+        let patchedContent: PatchedString = Content(inputString) {
+            Add(address: "three", simpleContent: "hello ")
+            // test an existing address
+            Test(expectedContent: "one")
+        }
+
+//        Content("one three")
+
+        let reduced = try patchedContent.reduced()
+        XCTAssertEqual(reduced, "one hello three")
+    }
+
+    func test_stringReducer_ifTestFails_thenPatchNotApplied() throws {
 
         let horseContent = "horse"
 
-        let patchedContent: PatchedString = Content("one three") {
+        let inputString = "one three"
+        let patchedContent: PatchedString = Content(inputString) {
+            Add(address: "three", simpleContent: " hello ")
             // test a non-existent address
             Test(expectedContent: horseContent)
         }
 
-        do {
-            let reduced = try patchedContent.reduced()
-            XCTFail("Expected to throw error when looking for '\(horseContent)' in the content '\(reduced)'")
-        }
-        catch {
-            // we expect an error, do nothing
-        }
+//        Content("one three")
+
+        let reduced = try patchedContent.reduced()
+        XCTAssertEqual(reduced, inputString)
     }
 
     func test_stringReducer_passingTestDoesNotThrowError() throws {
