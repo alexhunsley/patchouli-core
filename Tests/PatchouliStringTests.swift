@@ -207,7 +207,6 @@ extension PatchouliCoreTests {
             //     to PatchType2 cont+address holder! Yay.
             //     Needing this should be regarded as a code smell.
             //            AddressedPatchItemsBuilder.buildExpression(Delete(address: "hi"))
-
             Remove(address: "hi")
         }
 
@@ -249,9 +248,6 @@ extension PatchouliCoreTests {
             // test an existing address
             Test(expectedContent: "one")
         }
-
-//        Content("one three")
-
         let reduced = try patchedContent.reduced()
         XCTAssertEqual(reduced, "one hello three")
     }
@@ -266,9 +262,6 @@ extension PatchouliCoreTests {
             // test a non-existent address
             Test(expectedContent: horseContent)
         }
-
-//        Content("one three")
-
         let reduced = try patchedContent.reduced()
         XCTAssertEqual(reduced, inputString)
     }

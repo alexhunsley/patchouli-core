@@ -69,10 +69,6 @@ public enum PatchSpec<T: PatchType> {
 public struct PatchedContent<T: PatchType> {
     public typealias C = T.ContentType
 
-    // so maybe content will be an enum case on generic against <T: PatchType>,
-    // with literal(C) and fileURL(URL) and resourceName(String)
-    // Ah no! This remains C, of course. We change to use ContentIdea inside e.g. JSONPatchType?
-//    var content: ContentIdea<T>
     var content: C
     let contentPatches: [AddressedPatch<T>]
 

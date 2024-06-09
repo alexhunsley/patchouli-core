@@ -29,9 +29,7 @@ extension PatchType {
     static func isReferenceType() -> Bool { false }
 }
 
-//extension PatchedContent where T: PatchType, T.ContentType: Equatable {
-extension PatchedContent { // where T.ContentType: Equatable {
-
+extension PatchedContent {
 
     /// Tests both reduced and reduce
     func testReducers(expectedContent: T.ContentType, callingFunc: String = #function) throws where T.ContentType: Equatable {
@@ -42,7 +40,7 @@ extension PatchedContent { // where T.ContentType: Equatable {
         XCTAssertEqual(reduced, expectedContent,
                        "Didn't get expected content from reduced() (i.e. non-mutating reducer) in \(callingFunc)")
 
-        // we make a copy here so we don't have to mark this method as mutating
+        // we work on a copy so we don't have to mark this method as mutating
         var mutableContentCopy = self
         try mutableContentCopy.reduce()
 

@@ -85,21 +85,11 @@ public extension PatchedContent {
     /// using the `patcher` protocol witness.
     /// To use the default patcher for a PatchType, please instead use the convenience `reduce()`.
     mutating func reduce(_ patcher: MutatingPatchable<T>) throws -> Void {
-//        var accumulatedReduceResult = content
-
-        // this is a copy?
         let originalContent = content
 
         for item in contentPatches {
-
-            // dodo. Some actions can legitimately have no targetContent!
-//            guard var targetContent = item.contentPatch else {
-//                return
-//            }
-
             switch item.patchSpec {
 
-            // TODO other actions!
             case let .add(address):
                 guard var targetContent = item.contentPatch else { throw PatchouliError<T>.contentWasNil }
 
@@ -109,8 +99,6 @@ public extension PatchedContent {
                 add(&content, targetContent.content, address)
 
             case let .remove(address):
-                // there's no target content for a remove
-//                try targetContent.reduce(patcher)
                 guard let remove = patcher.remove else { throw PatchouliError<T>.mutatingRemoveNotSupported }
                 print("ALAL before remove: \(content)")
                 remove(&content, address)
@@ -125,15 +113,12 @@ public extension PatchedContent {
                 replace(&content, targetContent.content, address)
 
             case let .move(fromAddress, toAddress):
-//                try targetContent.reduce(patcher)
                 guard let move = patcher.move else { throw PatchouliError<T>.mutatingMoveNotSupported }
                 move(&content, fromAddress, toAddress)
 
             case let .test(expectedContent, address):
                 guard let test = patcher.test else { throw PatchouliError<T>.testNotSupported }
 
-//                do {
-//                content = 
                 do {
                     try test(content, expectedContent, address)
                 }
@@ -145,10 +130,6 @@ public extension PatchedContent {
                         break
                     }
                 }
-
-//                if !test(content, expectedContent, address) {
-//                    throw PatchouliError<T>.testFailed(content, address, expectedContent)
-//                }
 
             default:
                 break

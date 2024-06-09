@@ -227,11 +227,9 @@ public func Move<T: PatchType>(fromAddress: T.AddressType,
 
 // MARK: Test
 
-// TODO allow patched content for the expecfted content?
 public func Test<T: PatchType>(address: T.AddressType,
                                expectedSimpleContent: T.ContentType)
         -> AddressedPatch<T> {
 
-    AddressedPatch(patchSpec: .test(expectedSimpleContent, address)) //,
-//                   contentPatch: PatchedContent(content: expectedSimpleContent))
+    AddressedPatch(patchSpec: .test(expectedSimpleContent, address))
 }

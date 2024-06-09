@@ -28,9 +28,6 @@ public struct MutatingPatchable<T: PatchType> {
     public let replace: ReplaceHandler?
     public let copy: CopyHandler?
     public let move: MoveHandler?
-    // We may eventually want to make this throw (and return Void)
-    // in order to let PatchType writers give error information
-    // (would be wrapped in the Patchouli 'test failed' error)
     public let test: TestHandler?
 
     public init(add: AddHandler? = nil,
@@ -48,15 +45,3 @@ public struct MutatingPatchable<T: PatchType> {
         self.test = test
     }
 }
-
-// Should the mutating (inout) reducer be used by the non-mutating reducer?
-// For less repetition.
-//
-// Perhaps the default is that user can provide a non-mutating `reduced` at
-// minimum, and a mutating `reduce` is automatically provided that defaults to
-// using the former in the obvious way (call non-mutating one then assign to the
-// inout param). BUT we allow the user to provide their own inout reducer if they like
-// and think it's worth it!
-//
-// Look up again `mutating` and the declaration of structs with it if possible it's
-// needed somewhere else/later (can't remember the exact situ).

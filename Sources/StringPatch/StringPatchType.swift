@@ -71,25 +71,11 @@ public struct StringPatchType: PatchType {
                 .replacingOccurrences(of: fromAddress, with: "")
                 .replacingOccurrences(of: toAddress, with: fromAddress)
         },
-        // NB lasdt param not used for strings as doesn't make sense
         // NB last param not used for strings as doesn't make sense
         test: { (container: String, expectedContent: String, address: String) throws -> Void in
-            //        expectedContentDummy: String) -> Bool in
-
-//            return "asdasd"
-//            if !container.contains(address) {
-//                // throw
-//            }
-//            return container
+            if !container.contains(address) {
+                throw PatchouliError<StringPatchType>.testFailed(container, address, address) // expectedContent) // last param here?
+            }
         }
     )
 }
-
-
-//        throw PatchouliError<StringPatchType>.testFailed(container, address, address) // expectedContent) // last param here?
-            //    }
-//            return container
-
-//}
-
-
