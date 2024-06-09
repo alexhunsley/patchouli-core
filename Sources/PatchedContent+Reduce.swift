@@ -18,46 +18,56 @@ public extension PatchedContent {
     func reduced(_ patcher: Patchable<T>) throws -> T.ContentType {
         var accumulatedReduceResult = content
 
-        for item in contentPatches {
+        do {
+            for item in contentPatches {
 
-            let targetContent = item.contentPatch
+                let targetContent = item.contentPatch
 
-            print("Processing patch: \(item)")
-            switch item.patchSpec {
+                print("Processing patch: \(item)")
+                switch item.patchSpec {
 
-            case let .add(address):
-                if let newContent = try targetContent?.reduced(patcher) {
-                    guard let added = patcher.added else { throw PatchouliError<T>.addNotSupported }
-                    print("new content, address = \(newContent), \(address)")
-                    try accumulatedReduceResult = added(accumulatedReduceResult, newContent, address)
+                case let .add(address):
+                    if let newContent = try targetContent?.reduced(patcher) {
+                        guard let added = patcher.added else { throw PatchouliError<T>.addNotSupported }
+                        print("new content, address = \(newContent), \(address)")
+                        try accumulatedReduceResult = added(accumulatedReduceResult, newContent, address)
+                    }
+
+                case let .remove(address):
+                    guard let removed = patcher.removed else { throw PatchouliError<T>.removeNotSupported }
+                    try accumulatedReduceResult = removed(accumulatedReduceResult, address)
+
+                case let .replace(address):
+                    if let newContent = try targetContent?.reduced(patcher) {
+                        guard let replaced = patcher.replaced else { throw PatchouliError<T>.replaceNotSupported }
+                        try accumulatedReduceResult = replaced(accumulatedReduceResult, newContent, address)
+                    }
+
+                case let .copy(fromAddress, toAddress):
+                    guard let copied = patcher.copied else { throw PatchouliError<T>.copyNotSupported }
+                    try accumulatedReduceResult = copied(accumulatedReduceResult, fromAddress, toAddress)
+
+                case let .move(fromAddress, toAddress):
+                    guard let moved = patcher.moved else { throw PatchouliError<T>.moveNotSupported }
+                    try accumulatedReduceResult = moved(accumulatedReduceResult, fromAddress, toAddress)
+
+                case let .test(expectedContent, address):
+                    guard let test = patcher.test else { throw PatchouliError<T>.testNotSupported }
+                    // need to assign the result, get rid of bool? throw if it fails?
+                    try accumulatedReduceResult = test(accumulatedReduceResult, expectedContent, address)
+//                            throw PatchouliError<T>.testFailed(accumulatedReduceResult, address, expectedContent)
+                case .empty:
+                    break
                 }
-
-            case let .remove(address):
-                guard let removed = patcher.removed else { throw PatchouliError<T>.removeNotSupported }
-                try accumulatedReduceResult = removed(accumulatedReduceResult, address)
-
-            case let .replace(address):
-                if let newContent = try targetContent?.reduced(patcher) {
-                    guard let replaced = patcher.replaced else { throw PatchouliError<T>.replaceNotSupported }
-                    try accumulatedReduceResult = replaced(accumulatedReduceResult, newContent, address)
-                }
-
-            case let .copy(fromAddress, toAddress):
-                guard let copied = patcher.copied else { throw PatchouliError<T>.copyNotSupported }
-                try accumulatedReduceResult = copied(accumulatedReduceResult, fromAddress, toAddress)
-
-            case let .move(fromAddress, toAddress):
-                guard let moved = patcher.moved else { throw PatchouliError<T>.moveNotSupported }
-                try accumulatedReduceResult = moved(accumulatedReduceResult, fromAddress, toAddress)
-
-            case let .test(expectedContent, address):
-                guard let test = patcher.test else { throw PatchouliError<T>.testNotSupported }
-                if try !test(accumulatedReduceResult, expectedContent, address) {
-                    throw PatchouliError<T>.testFailed(accumulatedReduceResult, address, expectedContent)
-                }
-
-            case .empty:
-                break
+            }
+        }
+        catch let error as PatchouliError<T> {
+            switch error {
+            case .testFailed:
+                // if a test op fails, we just return the original content
+                return content
+            default:
+                throw error
             }
         }
         return accumulatedReduceResult
@@ -76,6 +86,9 @@ public extension PatchedContent {
     /// To use the default patcher for a PatchType, please instead use the convenience `reduce()`.
     mutating func reduce(_ patcher: MutatingPatchable<T>) throws -> Void {
 //        var accumulatedReduceResult = content
+
+        // this is a copy?
+        let originalContent = content
 
         for item in contentPatches {
 
@@ -118,9 +131,24 @@ public extension PatchedContent {
 
             case let .test(expectedContent, address):
                 guard let test = patcher.test else { throw PatchouliError<T>.testNotSupported }
-                if !test(content, expectedContent, address) {
-                    throw PatchouliError<T>.testFailed(content, address, expectedContent)
+
+//                do {
+//                content = 
+                do {
+                    try test(content, expectedContent, address)
                 }
+                catch let error as PatchouliError<T> {
+                    switch error {
+                    case .testFailed:
+                        content = originalContent
+                    default:
+                        break
+                    }
+                }
+
+//                if !test(content, expectedContent, address) {
+//                    throw PatchouliError<T>.testFailed(content, address, expectedContent)
+//                }
 
             default:
                 break

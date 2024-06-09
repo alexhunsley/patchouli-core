@@ -30,13 +30,16 @@ public struct StringPatchType: PatchType {
         //    copied: {
         moved: { (container: String, fromAddress: String, toAddress: String) -> String in
             container
-                // the order here is crucial
+            // the order here is crucial
                 .replacingOccurrences(of: fromAddress, with: "")
                 .replacingOccurrences(of: toAddress, with: fromAddress)
         },
         // we don't care about the expectedContent, it's just the address for this string patcher
         test: { (container: String, _: String, address: String) in
-            container.contains(address)
+            if !container.contains(address) {
+                throw PatchouliError<StringPatchType>.testFailed(container, address, address) // expectedContent) // last param here?
+            }
+            return container
         }
         // Note that we provide no 'move' implementation as it has no obvious meaning for string matching
     )
@@ -64,14 +67,29 @@ public struct StringPatchType: PatchType {
         //    copied: {
         move: { (container: inout String, fromAddress: String, toAddress: String) in
             container = container
-                // the order here is crucial
+            // the order here is crucial
                 .replacingOccurrences(of: fromAddress, with: "")
                 .replacingOccurrences(of: toAddress, with: fromAddress)
         },
         // NB lasdt param not used for strings as doesn't make sense
-        test: { (container: String, expectedContent: String, address: String) -> Bool in
-//        expectedContentDummy: String) -> Bool in
-            container.contains(address)
+        // NB last param not used for strings as doesn't make sense
+        test: { (container: String, expectedContent: String, address: String) throws -> Void in
+            //        expectedContentDummy: String) -> Bool in
+
+//            return "asdasd"
+//            if !container.contains(address) {
+//                // throw
+//            }
+//            return container
         }
     )
 }
+
+
+//        throw PatchouliError<StringPatchType>.testFailed(container, address, address) // expectedContent) // last param here?
+            //    }
+//            return container
+
+//}
+
+

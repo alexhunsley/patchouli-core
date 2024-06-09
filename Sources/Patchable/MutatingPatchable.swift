@@ -21,7 +21,7 @@ public struct MutatingPatchable<T: PatchType> {
     public typealias ReplaceHandler = @Sendable (inout C, C, A) -> Void
     public typealias CopyHandler = @Sendable (inout C, A, A) -> Void
     public typealias MoveHandler = @Sendable (inout C, A, A) -> Void
-    public typealias TestHandler = @Sendable (C, C, A) -> Bool
+    public typealias TestHandler = @Sendable (C, C, A) throws -> Void
 
     public let add: AddHandler?
     public let remove: RemoveHandler?

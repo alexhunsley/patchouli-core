@@ -261,9 +261,6 @@ extension PatchouliCoreTests {
 
     func test_stringReducer_passingTestDoesNotThrowError() throws {
         let patchedContent: PatchedString = Content("three one three two") {
-            // magic sauce to get type inference going!
-            // https://stackoverflow.com/q/67951741/348476
-
             Test(expectedContent: "three")
             Test(expectedContent: "ne th")
         }
