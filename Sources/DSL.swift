@@ -30,6 +30,7 @@
 //        attempt with protocols that just got a bit... foamy; then the clarity
 //        of going with PWs.)
 //
+// [ ] do cookbook section for the various things you can do
 //
 // I had the idea in the `abandon--make-json-patch-assemble-entire-patch-data-before-applying`
 // branch about gathering the json patch operations together then doing them in one go, once child
@@ -113,8 +114,6 @@ public struct AddressedPatchItemsBuilder<T: PatchType> {
     public static func buildFinalResult(_ component: [AddressedPatch<T>]) -> [AddressedPatch<T>] {
         component.filter { !$0.isEmpty }
     }
-    
-    // TODO if and if ... else.
 }
 
 // MARK: - Generic primitives for DSL:

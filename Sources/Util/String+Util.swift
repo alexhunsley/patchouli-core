@@ -1,7 +1,13 @@
 import Foundation
 
-extension String {
+public extension String {
     func prefixing(_ match: String, with prefix: String) -> String {
         self.replacingOccurrences(of: match, with: prefix + match)
+    }
+}
+
+public extension Data {
+    func asString() -> String {
+        String(decoding: self, as: UTF8.self)
     }
 }

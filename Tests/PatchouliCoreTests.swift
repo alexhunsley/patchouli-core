@@ -1,4 +1,5 @@
 import XCTest
+//import FrameworkHolder
 
 @testable import PatchouliCore
 
@@ -388,6 +389,13 @@ final class PatchouliCoreTests: XCTestCase {
         XCTAssertEqual(patchedContent.contentPatches.count, 12, "Unexpected number of items in patch list")
         try patchedContent.testReducers(expectedContent: "four")
     }
+
+    // need to depend on framework holder to use this, or have own bundle
+//    func testBundleLoading() throws {
+////        let (fileData, fileURL) = make
+//        let content = Content(.bundleResource(Bundle(for: FrameworkHolder.self), "User"))
+//
+//    }
 }
 
 // MARK: - Helpers
