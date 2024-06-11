@@ -53,9 +53,7 @@ public extension PatchedContent {
 
                 case let .test(expectedContent, address):
                     guard let test = patcher.test else { throw PatchouliError<T>.testNotSupported }
-                    // need to assign the result, get rid of bool? throw if it fails?
                     try accumulatedReduceResult = test(accumulatedReduceResult, expectedContent, address)
-//                            throw PatchouliError<T>.testFailed(accumulatedReduceResult, address, expectedContent)
                 case .empty:
                     break
                 }

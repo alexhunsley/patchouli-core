@@ -13,6 +13,10 @@
 //     But don't want to make this too complicated.
 //
 
+// [ ] rename idea for DSL: simpleContent -> Content, and Content -> PatchedContent
+// [ ] check for open/final etc
+// [ ] Remove +Print file? is just commented out
+// [ ] put the mutating reducer into a diff branch as experimental feature
 // [ ] Add tip on writing your own patcher - typically, what to do in what order.
 // [ ] Add advice to readme about having your own pass-along DSL. Reasons:
 //       1. Can remove actions your patcher might not support; kinder
@@ -57,6 +61,18 @@
 // jsonpatch, but it’s hardly compute intensive.
 //
 // So: maybe write up above bit on the GitHub page, but don’t implement at this point.
+//
+//
+// For issues/list:
+//
+//      Caching on loading from files?
+//      So user can just use the two above without worrying about efficiency? hmm a bit magical...
+//      but we don't want to load data from a file if it's not even used!
+//      but if user declares that content ahead of time, and uses it in multiple places, it won't
+//      load until actually called (and can cache).
+//      Need to warn user if there's a gotcha like this.
+
+
 
 
 // MARK: - Result builder

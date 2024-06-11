@@ -17,7 +17,7 @@ public protocol PatchType {
     /// A Patchable protcol witness, used by the reducer
     static var patcher: Patchable<Self> { get }
 
-    // the in-place patcher is optional
+    /// the in-place patcher is optional
     static var mutatingPatcher: MutatingPatchable<Self>? { get }
 }
 
@@ -33,18 +33,6 @@ public enum Once {
 
     private init() { self = .once }
     public static let instance = Once()
-}
-
-/// used as a dummy in tests
-public struct DummyPatchType: PatchType {
-    public typealias ContentType = Once
-    public typealias AddressType = Never
-
-    public static var emptyContent: ContentType { Once.once }
-
-    // The Never patch provides no functions
-    public static var patcher = Patchable<DummyPatchType>()
-    public static var mutatingPatcher = MutatingPatchable<DummyPatchType>()
 }
 
 // -----------------------------------------------------------------

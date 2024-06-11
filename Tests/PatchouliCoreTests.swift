@@ -1,5 +1,4 @@
 import XCTest
-//import FrameworkHolder
 
 @testable import PatchouliCore
 
@@ -88,7 +87,6 @@ final class PatchouliCoreTests: XCTestCase {
             Replace(address: "three", with: "four"),
         ]
 
-//        PatchedContent<StringPatchType>
         let patchedContent: PatchedString = Content("one") {
             for index in 0...2 {
                 patch[index]
@@ -122,35 +120,36 @@ final class PatchouliCoreTests: XCTestCase {
     // MARK: - If
 
     func test_DSL_ifTrueWorks() throws {
-        let patch: StringPatchItem = Replace(address: "one", with: "two")
+        let patch_two: StringPatchItem = Replace(address: "one", with: "two")
+        let patch_three: StringPatchItem = Replace(address: "one", with: "three")
         let trueCondition = true
 
         let patchedContent: PatchedString = Content("one") {
             if trueCondition {
-                patch
+                patch_two
             }
-            patch
+            patch_three
         }
 
         XCTAssertEqual(patchedContent.contentPatches.count, 2, "Unexpected number of items in patch list")
         try patchedContent.testReducers(expectedContent: "two")
     }
 
-//    func test_DSL_ifFalseWorks() throws {
-//        let patch: StringPatchItem = Patch(address: "one", with: "two")
-//        let falseCondition = false
-//
-//        let patchedContent: PatchedString = Content("one") {
-//            // do i need to move to making it a list of lists? then we flatten in the prepare bit.
-//            if falseCondition {
-//                patch
-//            }
-//            Patch(address: "tree", with: "horse")
-//        }
-//
-//        XCTAssertEqual(patchedContent.contentPatches.count, 1, "Unexpected number of items in patch list")
-//        try patchedContent.testReducers(expectedContent: "one")
-//    }
+    func test_DSL_ifFalseWorks() throws {
+        let patch_two: StringPatchItem = Replace(address: "one", with: "two")
+        let patch_three: StringPatchItem = Replace(address: "one", with: "three")
+        let falseCondition = false
+
+        let patchedContent: PatchedString = Content("one") {
+            if falseCondition {
+                patch_two
+            }
+            patch_three
+        }
+
+        XCTAssertEqual(patchedContent.contentPatches.count, 1, "Unexpected number of items in patch list")
+        try patchedContent.testReducers(expectedContent: "three")
+    }
 
     func test_DSL_ifElseTrueWorks() throws {
         let patch: StringPatchItem = Replace(address: "one", with: "two")
@@ -235,7 +234,6 @@ final class PatchouliCoreTests: XCTestCase {
         try patchedContent.testReducers(expectedContent: "three")
     }
 
-    // doesn't work, same as the if next to Patch issue: variadics not taking an array, and if/for produces an array.
     func test_DSL_siblingIfsWorks() throws {
         let patch: StringPatchItem? = Replace(address: "one", with: "two")
         let patch2: StringPatchItem = Replace(address: "two", with: "three")
@@ -389,13 +387,6 @@ final class PatchouliCoreTests: XCTestCase {
         XCTAssertEqual(patchedContent.contentPatches.count, 12, "Unexpected number of items in patch list")
         try patchedContent.testReducers(expectedContent: "four")
     }
-
-    // need to depend on framework holder to use this, or have own bundle
-//    func testBundleLoading() throws {
-////        let (fileData, fileURL) = make
-//        let content = Content(.bundleResource(Bundle(for: FrameworkHolder.self), "User"))
-//
-//    }
 }
 
 // MARK: - Helpers

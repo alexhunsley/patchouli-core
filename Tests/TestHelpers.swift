@@ -54,3 +54,14 @@ extension PatchedContent {
         XCTAssertNoThrow(try mutableCopy.reduce())
     }
 }
+
+public struct DummyPatchType: PatchType {
+    public typealias ContentType = Once
+    public typealias AddressType = Never
+
+    public static var emptyContent: ContentType { Once.once }
+
+    // The dummy patcher provides no patching functions
+    public static var patcher = Patchable<DummyPatchType>()
+    public static var mutatingPatcher = MutatingPatchable<DummyPatchType>()
+}

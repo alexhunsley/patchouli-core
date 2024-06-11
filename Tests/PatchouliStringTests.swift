@@ -25,7 +25,6 @@ extension PatchouliCoreTests {
         // Makes a "no nothing" patched string using the DSL
         let trivialPatchedString: PatchedString = Content("one")
 
-        // Result: "one"
         XCTAssertEqual(try trivialPatchedString.reduced(), "one")
 
         // make a patch list using a helper func
@@ -55,6 +54,8 @@ extension PatchouliCoreTests {
         try patchedContent.testReducers(expectedContent: "hello")
     }
 
+    // herus THIS SNOULD FAIL you crazy person!
+    // reducer starts deepest firsst!
     func test_stringReducer_nestedReplaceWorks() throws {
         let patchedContent: PatchedString = Content("one") {
             Replace(address: "one", with: "hello") {
@@ -77,8 +78,8 @@ extension PatchouliCoreTests {
     func test_stringReducer_ReplaceIgnoresUnmatchedPatches() throws {
         let patchedContent: PatchedString = Content("one") {
             Replace(address: "", with: "hello")
-            Replace(address: "sonet", with: "hello")
-            Replace(address: "a house", with: "hello")
+            Replace(address: "sonet", with: "afternoon")
+            Replace(address: "a house", with: "bye")
         }
         try patchedContent.testReducers(expectedContent: "one")
     }
@@ -201,12 +202,6 @@ extension PatchouliCoreTests {
     func test_stringReducer_missingDeletedFunctionThrowsError() throws {
 
         let patchedContent: PatchedString = Content("one") {
-            // magic sauce to get the type inferred.
-            // See https://stackoverflow.com/q/67951741/348476
-            //  -- we don't need this any more, after moving to
-            //     to PatchType2 cont+address holder! Yay.
-            //     Needing this should be regarded as a code smell.
-            //            AddressedPatchItemsBuilder.buildExpression(Delete(address: "hi"))
             Remove(address: "hi")
         }
 
@@ -224,8 +219,6 @@ extension PatchouliCoreTests {
     func test_stringReducer_missingAddedFunctionThrowsError() throws {
 
         let patchedContent: PatchedString = Content("one") {
-            // magic sauce to get type inference going!
-            // https://stackoverflow.com/q/67951741/348476
             Add(address: "1", simpleContent: "2")
             Add(address: "1", content: Content("ASd"))
         }
