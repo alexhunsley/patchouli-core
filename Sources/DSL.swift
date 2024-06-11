@@ -24,13 +24,14 @@
 //          instead of 'address: '
 //
 // [ ] Add readme section at end on 'lessons learned/thoughts' etc:
-//        e.g. "this sounds like a simple thing but size of project was
-//        ideal for provoking some interesting decision making, and touching
+  //        ideal for provoking some interesting decision making, and touching
 //        on some nice things like Protocol Witnesses (maybe mention the initial
 //        attempt with protocols that just got a bit... foamy; then the clarity
 //        of going with PWs.)
 //
 // [ ] do cookbook section for the various things you can do
+// [ ] for cookbook: how to plug in your own JSON patch lib (i.e. make your own reducer aroun it)
+// [ ] should file and bundle loading be in the core? Probably, be useful generally.
 //
 // I had the idea in the `abandon--make-json-patch-assemble-entire-patch-data-before-applying`
 // branch about gathering the json patch operations together then doing them in one go, once child
@@ -120,17 +121,6 @@ public struct AddressedPatchItemsBuilder<T: PatchType> {
 
 // MARK: - Content
 
-// TODO add way to load data from a file URL, e.g. json.
-// https://www.swiftbysundell.com/articles/working-with-files-and-folders-in-swift/
-//
-// maybe have bundleResource, and a direct file path? as options.
-// e.g. contentFilePath: and bundleResourceName:.
-// We want to do loading sensibly? Don't load same thing twice, cache it somehow.
-// So user can just use the two above without worrying about efficiency? hmm a bit magical...
-// but we don't want to load data from a file if it's not even used!
-// but if user declares that content ahead of time, and uses it in multiple places, it won't
-// load until actually called (and can cache).
-// Need to warn user if there's a gotcha like this.
 public func Content<T: PatchType>(_ content: T.ContentType,
                                   @AddressedPatchItemsBuilder<T> patchedBy patchItems: PatchListProducer<T> = { AddressedPatch.emptyPatchList })
         -> PatchedContent<T> {
@@ -149,6 +139,8 @@ public func Content<T: PatchType>(_ content: T.ContentType,
 // MARK: Add
 
 public func Add<T: PatchType>(address: T.AddressType,
+                              // herus: rename param to patchedContent?
+                              // then simpleContent becomes just content?
                               content: PatchedContent<T>)
             -> AddressedPatch<T> {
 
