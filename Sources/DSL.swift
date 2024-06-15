@@ -13,7 +13,10 @@
 //     But don't want to make this too complicated.
 //
 
-// [ ] rename idea for DSL: simpleContent -> Content, and Content -> PatchedContent
+// [ ] rename idea for DSL? -> simpleContent -> Content, and Content -> PatchedContent
+// [ ] add notes to docs that we try on reduce because that's where loading of file/bundle
+//       resouce actually happens
+// [ ] can 'let' and 'var' be used inside DSL expr? find out
 // [ ] check for open/final etc
 // [ ] Remove +Print file? is just commented out
 // [ ] put the mutating reducer into a diff branch as experimental feature
