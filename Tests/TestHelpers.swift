@@ -38,7 +38,7 @@ extension PatchedContent {
         let reduced = try reduced()
 
         XCTAssertEqual(reduced, expectedContent,
-                       "Didn't get expected content from reduced() in \(callingFunc)")
+                       "Didn't get expected content from reduced() (i.e. non-mutating reducer) in \(callingFunc)")
 
         // we work on a copy so we don't have to mark this method as mutating
         var mutableContentCopy = self
@@ -63,4 +63,5 @@ public struct DummyPatchType: PatchType {
 
     // The dummy patcher provides no patching functions
     public static var patcher = Patchable<DummyPatchType>()
+    public static var mutatingPatcher = MutatingPatchable<DummyPatchType>()
 }

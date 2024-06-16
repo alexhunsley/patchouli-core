@@ -16,6 +16,14 @@ public protocol PatchType {
 
     /// A Patchable protcol witness, used by the reducer
     static var patcher: Patchable<Self> { get }
+
+    /// the in-place patcher is optional
+    static var mutatingPatcher: MutatingPatchable<Self>? { get }
+}
+
+extension PatchType {
+    // nil conformance as default for the in-place patcher (means none provided)
+    public static var mutatingPatcher: MutatingPatchable<Self>? { nil }
 }
 
 // Once is very similar to Never, but it has one accessible

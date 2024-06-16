@@ -43,4 +43,38 @@ public struct StringPatchType: PatchType {
         }
         // Note that we provide no 'move' implementation as it has no obvious meaning for string matching
     )
+
+    public static var mutatingPatcher: MutatingPatchable<StringPatchType>? = .init(
+        add: { (container: inout String, content: String, address: String) in
+            // We interpret 'add' in string matching to mean "place a copy of content
+            // before every occurence of the address".
+            // if the address isn't found in the string, we don't care.
+            //
+            // Value types like strings can't actually be
+            // mutated in-place so this is as close as we get:
+            // assigning. Same end result as far as caller who
+            // passes us the inout param, though.
+            container = container.prefixing(address, with: content) // content, new content, address
+        },
+        remove: { (container: inout String, address: String) in
+            container = container.replacingOccurrences(of: address, with: "")
+        },
+        replace: { (container: inout String, replacement: String, address: String) in
+            container = container.replacingOccurrences(of: address, with: replacement)
+        },
+        // 'copied' doesn't really make sense, so omitted
+        //    copied: {
+        move: { (container: inout String, fromAddress: String, toAddress: String) in
+            container = container
+            // the order here is crucial
+                .replacingOccurrences(of: fromAddress, with: "")
+                .replacingOccurrences(of: toAddress, with: fromAddress)
+        },
+        // NB last param not used for strings as doesn't make sense
+        test: { (container: String, expectedContent: String, address: String) throws -> Void in
+            if !container.contains(address) {
+                throw PatchouliError<StringPatchType>.testFailed(container, address, address)
+            }
+        }
+    )
 }
