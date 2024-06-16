@@ -11,11 +11,6 @@ let package = Package(
             name: "PatchouliCore",
             targets: ["PatchouliCore"]),
     ],
-    dependencies: [
-        // .upToNextMajor(from: "1.0.6"))
-        // JSONPatch has tags both "1.2.3" and "v1.2.3"
-        .package(url: "https://github.com/raymccrae/swift-jsonpatch", exact: "1.0.6")
-    ],
     targets: [
         .target(
             name: "PatchouliCore",
