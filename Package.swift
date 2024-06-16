@@ -12,7 +12,9 @@ let package = Package(
             targets: ["PatchouliCore"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/raymccrae/swift-jsonpatch", .upToNextMajor(from: "1.0.6"))
+        // .upToNextMajor(from: "1.0.6"))
+        // JSONPatch has tags both "1.2.3" and "v1.2.3"
+        .package(url: "https://github.com/raymccrae/swift-jsonpatch", exact: "1.0.6")
     ],
     targets: [
         .target(
