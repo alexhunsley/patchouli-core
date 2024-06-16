@@ -20,7 +20,7 @@ let stringPatchContent: StringPatchContent = Content("Hello World") {
     Replace(address: "World", with: "my friend")
 }
 
-let result: String = try stringPatchContent.reduce()
+let result: String = try stringPatchContent.reduced()
 ```
 
 # How Patchouli Core works
