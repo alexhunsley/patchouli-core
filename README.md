@@ -11,7 +11,7 @@ The representation of patchable data and the DSL are both generic, which means t
 
 Patchouli Core contains a toy string patcher for demonstration purposes:
 
-```
+```swift
 // Input: "Hello World"
 // Patched result: "Goodbye my friend"
 
