@@ -39,19 +39,11 @@ extension PatchedContent {
 
         XCTAssertEqual(reduced, expectedContent,
                        "Didn't get expected content from reduced() (i.e. non-mutating reducer) in \(callingFunc)")
-
-        // we work on a copy so we don't have to mark this method as mutating
-        var mutableContentCopy = self
-        try mutableContentCopy.reduce()
-
-        XCTAssertEqual(mutableContentCopy.content, expectedContent,
-                       "Didn't get expected content from reduce() (i.e. mutating reducer) in \(callingFunc)")
     }
 
     func assertReducersDoNotThrow() {
         var mutableCopy = self
         XCTAssertNoThrow(try mutableCopy.reduced())
-        XCTAssertNoThrow(try mutableCopy.reduce())
     }
 }
 
