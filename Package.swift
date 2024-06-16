@@ -13,9 +13,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "PatchouliCore",
-            // we need this vvv  see https://stackoverflow.com/a/71494695/348476
-            dependencies: [.product(name: "JSONPatch", package: "swift-jsonpatch")]
+            name: "PatchouliCore"
         ),
         .testTarget(
             name: "PatchouliCoreTests",
