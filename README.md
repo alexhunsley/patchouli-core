@@ -1,6 +1,6 @@
 # Patchouli Core
 
-is a generic patching engine and DSL for Swift, based on JSON Patch's operations (Add, Remove, Copy, etc).
+is a generic patching engine and DSL for Swift, based on JSON Patch's operations (`Add`, `Remove`, `Replace`, `Copy`, `Move`, and `Test`).
 
 It is used by Patchouli JSON, an ergonomic implemention of JSON Patch for Swift.
 
