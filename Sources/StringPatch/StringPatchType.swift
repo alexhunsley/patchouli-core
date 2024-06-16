@@ -37,14 +37,13 @@ public struct StringPatchType: PatchType {
         // we don't care about the expectedContent, it's just the address for this string patcher
         test: { (container: String, _: String, address: String) in
             if !container.contains(address) {
-                throw PatchouliError<StringPatchType>.testFailed(container, address, address) // expectedContent) // last param here?
+                throw PatchouliError<StringPatchType>.testFailed(container, address, address)
             }
             return container
         }
         // Note that we provide no 'move' implementation as it has no obvious meaning for string matching
     )
 
-    // TODO could use the non-mutating things above the job.
     public static var mutatingPatcher: MutatingPatchable<StringPatchType>? = .init(
         add: { (container: inout String, content: String, address: String) in
             // We interpret 'add' in string matching to mean "place a copy of content
@@ -74,7 +73,7 @@ public struct StringPatchType: PatchType {
         // NB last param not used for strings as doesn't make sense
         test: { (container: String, expectedContent: String, address: String) throws -> Void in
             if !container.contains(address) {
-                throw PatchouliError<StringPatchType>.testFailed(container, address, address) // expectedContent) // last param here?
+                throw PatchouliError<StringPatchType>.testFailed(container, address, address)
             }
         }
     )

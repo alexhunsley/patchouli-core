@@ -8,13 +8,7 @@ let project = Project(
             destinations: .macOS,
             product: .staticLibrary,
             bundleId: "io.tuist.PatchouliCore",
-//            infoPlist: .extendingDefault(
-//                with: [
-//                    "UILaunchStoryboardName": "LaunchScreen.storyboard",
-//                ]
-//            ),
             sources: ["Sources/**"],
-//            resources: ["PatchouliCore/Resources/**"],
             dependencies: []
         ),
         .target(

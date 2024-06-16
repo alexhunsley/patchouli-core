@@ -398,8 +398,3 @@ extension PatchouliCoreTests {
         }
     }
 }
-
-// reducer tests
-extension PatchouliCoreTests {
-    // TODO test that a stub reducer (protocol witness) has its functions invoked
-}

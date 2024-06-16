@@ -22,9 +22,6 @@ public struct Patchable<T: PatchType> {
     public let replaced: ReplacedHandler?
     public let copied: CopiedHandler?
     public let moved: MovedHandler?
-    // We may eventually want to make this throw (and return Void)
-    // in order to let PatchType writers give error information
-    // (would be wrapped in the Patchouli 'test failed' error)
     public let test: TestHandler?
 
     public init(added: AddedHandler? = nil,

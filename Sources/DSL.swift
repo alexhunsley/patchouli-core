@@ -2,82 +2,6 @@
 // DSL support
 // The intermediate types that our results builder makes into a structure.
 
-//
-// current issues:
-//
-//   see this comment in core unit test:
-//     so we can't have patch alongside the for... because of variadic not
-//     taking array of patches (which the for produce)!
-//     This means we're limited to using if and if...else in isolation for now.
-//     Maybe rethink fundamental result builder design...
-//     But don't want to make this too complicated.
-//
-
-// [ ] rename idea for DSL? -> simpleContent -> Content, and Content -> PatchedContent
-// [ ] add notes to docs that we try on reduce because that's where loading of file/bundle
-//       resouce actually happens
-// [ ] can 'let' and 'var' be used inside DSL expr? find out
-// [ ] check for open/final etc
-// [ ] Remove +Print file? is just commented out
-// [ ] put the mutating reducer into a diff branch as experimental feature
-// [ ] Add tip on writing your own patcher - typically, what to do in what order.
-// [ ] Add advice to readme about having your own pass-along DSL. Reasons:
-//       1. Can remove actions your patcher might not support; kinder
-//          for user to not be able to find a function than to get
-//          a runtime error when they call reduce() (BUT the error
-//          does tell them that it's not supported)
-//       2. A pass-along DSL can rename some params to be nicer for
-//          the domain. For example, JSON Patch would use param label 'path: '
-//          instead of 'address: '
-//
-// [ ] Add readme section at end on 'lessons learned/thoughts' etc:
-  //        ideal for provoking some interesting decision making, and touching
-//        on some nice things like Protocol Witnesses (maybe mention the initial
-//        attempt with protocols that just got a bit... foamy; then the clarity
-//        of going with PWs.)
-//
-// [ ] do cookbook section for the various things you can do
-// [ ] for cookbook: how to plug in your own JSON patch lib (i.e. make your own reducer aroun it)
-// [ ] should file and bundle loading be in the core? Probably, be useful generally.
-//
-// I had the idea in the `abandon--make-json-patch-assemble-entire-patch-data-before-applying`
-// branch about gathering the json patch operations together then doing them in one go, once child
-// ops collected, to let json patch deal with the test op failing mean "don't change data" thing;
-// but it's too annoying and leaky. It would complicate the core json patch, since we'd need "final
-// applicator" once children were applied, I think.
-//
-// Calling jsonpatch once per child op seems annoying, but I think it's the right choice
-// due to the general core thing.
-//
-// 2024-06-08 further comment on above:
-//
-// Trying to use the existing reducer funcs to do the list thing is misguided I think, but:
-// If I want to do this, keep the “pure” reducer, and add a “list” reducer:
-// This comprises:
-//
-//   ([C_i], C) -> [C_i]    (Compiling a list of intermediate content type C_i, ie Data representing a single jsonpatch item)
-//
-//   (C, [C_i]) -> C   (Calling jsonpatch with list applied to parent C)
-//
-// However: is it really worth the bother? Using jsonpatch the list way will still involve it doing the patching up until
-// say a test fails — it’s not like we’re avoiding that the “nice” way! We’d just be avoiding multiple invocations to
-// jsonpatch, but it’s hardly compute intensive.
-//
-// So: maybe write up above bit on the GitHub page, but don’t implement at this point.
-//
-//
-// For issues/list:
-//
-//      Caching on loading from files?
-//      So user can just use the two above without worrying about efficiency? hmm a bit magical...
-//      but we don't want to load data from a file if it's not even used!
-//      but if user declares that content ahead of time, and uses it in multiple places, it won't
-//      load until actually called (and can cache).
-//      Need to warn user if there's a gotcha like this.
-
-
-
-
 // MARK: - Result builder
 import Foundation
 
@@ -195,18 +119,6 @@ public func Replace<T: PatchType>(address: T.AddressType,
                    contentPatch: content)
 }
 
-/// Convenience that wraps 'simpleContent' in a Content() with optional sub-patches
-///
-/// Examples:
-///
-///     let p1 = Patch1(address: "lex", with: "xle")
-///
-///     Patch1(address: "hunsley", with:"one two, one two") {
-///         Patch1(address: "one", with: "foo")
-///         Patch1(address: "two", with: "bar")
-///     }
-///
-///     // make 'withPatchedSimpleContent' variant? For when list follows...?
 public func Replace<T: PatchType>(address: T.AddressType,
                                   with simpleContent: T.ContentType,
                                   @AddressedPatchItemsBuilder<T> patchedBy patchItems: PatchListProducer<T> = { AddressedPatch.emptyPatchList })

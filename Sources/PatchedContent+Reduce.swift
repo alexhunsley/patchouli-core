@@ -6,8 +6,6 @@ import Foundation
 public extension PatchedContent {
 
     /// Convenience that calls reduce using the patchable for the PatchType (i.e. T)
-    /// TODO  ~~~this could actually be a calculated property (no params to give). Is that wise tho'?~~~
-    ///     --- no, it throws, so must be a func.
     func reduced() throws -> T.ContentType {
         try reduced(T.patcher)
     }
@@ -23,7 +21,6 @@ public extension PatchedContent {
 
                 let targetContent = item.contentPatch
 
-                print("Processing patch: \(item)")
                 switch item.patchSpec {
 
                 case let .add(address):
@@ -62,7 +59,7 @@ public extension PatchedContent {
         catch let error as PatchouliError<T> {
             switch error {
             case .testFailed:
-                // if a test op fails, we just return the original content
+                // Per JSON Patch spec, if a test op fails we just return the original content
                 return content
             default:
                 throw error
@@ -98,9 +95,7 @@ public extension PatchedContent {
 
             case let .remove(address):
                 guard let remove = patcher.remove else { throw PatchouliError<T>.mutatingRemoveNotSupported }
-                print("ALAL before remove: \(content)")
                 remove(&content, address)
-                print("ALAL after remove: \(content)")
 
             case let .replace(address):
                 guard var targetContent = item.contentPatch else { throw PatchouliError<T>.contentWasNil }
