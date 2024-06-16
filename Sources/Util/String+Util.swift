@@ -7,7 +7,7 @@ public extension String {
 }
 
 public extension Data {
-    func asString() -> String {
+    func string() -> String {
         String(decoding: self, as: UTF8.self)
     }
 }
