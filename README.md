@@ -22,9 +22,3 @@ let stringPatchContent: StringPatchContent = Content("Hello World") {
 
 let result: String = try stringPatchContent.reduced()
 ```
-
-# How Patchouli Core works
-
-It has two major parts: a DSL that feels similar to SwiftUI, for constructing the patch, and a tree reducer which then performs the patching using appropriate functions.
-
-The representation of patchable data and the DSL are both generic, which means that you can write a patcher for anything you like.
