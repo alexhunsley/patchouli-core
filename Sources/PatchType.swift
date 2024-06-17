@@ -64,7 +64,7 @@ public struct AddressedPatch<T: PatchType> {
     let patchSpec: PatchSpec<T>
     let contentPatch: PatchedContent<T>?
 
-    init(patchSpec: PatchSpec<T>, contentPatch: PatchedContent<T>? = nil) {
+    public init(patchSpec: PatchSpec<T>, contentPatch: PatchedContent<T>? = nil) {
         self.patchSpec = patchSpec
         self.contentPatch = contentPatch
     }
