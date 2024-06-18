@@ -39,7 +39,7 @@ public struct StringPatchType: PatchType {
 }
 ```
 
-To this struct we add a definition of `empty`; this is just an instance of ContentType that is considered 'empty content':
+To this struct we add a definition of `empty`; this is just an instance of `ContentType` that is considered 'empty content':
 
 ```swift
    public static var emptyContent: ContentType = ""
