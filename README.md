@@ -45,7 +45,7 @@ To this struct we add a definition of `empty`; this is just an instance of `Cont
    public static var emptyContent: ContentType = ""
 ```
 
-And finally, our struct needs to be told how perform the various kinds of patching operation possible. To do this, we add a **protocol witness** to the struct, which looks like this:
+And finally, our struct needs to be told how to perform the various kinds of patching operation possible. To do this, we add a **protocol witness** to the struct, which looks like this:
 
 ```swift
     /// The Protocol Witness used by the reducer
