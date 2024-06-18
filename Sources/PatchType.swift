@@ -18,17 +18,6 @@ public protocol PatchType {
     static var patcher: Patchable<Self> { get }
 }
 
-// Once is very similar to Never, but it has one accessible
-// instance (and cannot be inited).
-public enum Once {
-    case once
-
-    private init() { self = .once }
-    public static let instance = Once()
-}
-
-// -----------------------------------------------------------------
-
 /// This generic PatchSpec's design is based on JSONPatch's operations.
 public enum PatchSpec<T: PatchType> {
     public typealias A = T.AddressType

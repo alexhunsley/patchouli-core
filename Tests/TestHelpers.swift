@@ -56,3 +56,12 @@ public struct DummyPatchType: PatchType {
     // The dummy patcher provides no patching functions
     public static var patcher = Patchable<DummyPatchType>()
 }
+
+// Once is very similar to Never, but it has one accessible
+// instance (and cannot be inited).
+public enum Once {
+    case once
+
+    private init() { self = .once }
+    public static let instance = Once()
+}

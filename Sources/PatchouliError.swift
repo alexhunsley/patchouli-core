@@ -9,4 +9,3 @@ public enum PatchouliError<T: PatchType>: Error {
 
     case testFailed(T.ContentType, T.AddressType, T.ContentType)
 }
-
