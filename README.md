@@ -29,7 +29,7 @@ Patchouli Core contains a toy patcher example: a string patcher (see `StringPatc
 
 Firstly, we have to define what the content type is that we're patching, and what the address type is. An address is some data that can locate one or more parts in a piece of the content type.
 
-```
+```swift
 public struct StringPatchType: PatchType {
     // ContentType: A string patcher works on strings
     public typealias ContentType = String
@@ -41,13 +41,13 @@ public struct StringPatchType: PatchType {
 
 To this struct we add a definition of `empty`; this is just an instance of ContentType that is considered 'empty content':
 
-```
+```swift
    public static var emptyContent: ContentType = ""
 ```
 
 And finally, our struct needs to be told how perform the various kinds of patching operation possible. To do this, we add a **protocol witness** to the struct, which looks like this:
 
-```
+```swift
     /// The Protocol Witness used by the reducer
     static public let patcher = Patchable<StringPatchType>(
         added: { (container: String, content: String, address: String) -> String in
@@ -90,7 +90,7 @@ And that's all you need to do.
 
 To pull it all together, the entire `StringPatchType` definition is this:
 
-```
+```swift
 public struct StringPatchType: PatchType {
     // ContentType: A string patcher works on strings
     public typealias ContentType = String
