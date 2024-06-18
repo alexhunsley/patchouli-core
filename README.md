@@ -68,7 +68,6 @@ And finally, our struct needs to be told how perform the various kinds of patchi
         //    copied: {
         moved: { (container: String, fromAddress: String, toAddress: String) -> String in
             container
-            // the order here is crucial
                 .replacingOccurrences(of: fromAddress, with: "")
                 .replacingOccurrences(of: toAddress, with: fromAddress)
         },
@@ -121,7 +120,6 @@ public struct StringPatchType: PatchType {
         //    copied: {
         moved: { (container: String, fromAddress: String, toAddress: String) -> String in
             container
-            // the order here is crucial
                 .replacingOccurrences(of: fromAddress, with: "")
                 .replacingOccurrences(of: toAddress, with: fromAddress)
         },
