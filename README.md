@@ -86,7 +86,7 @@ And finally, our struct needs to be told how to perform the various kinds of pat
 Note that we don't provide an implementation of `copy` for our string patcher. Every kind of operation is optional, but providing at least one is recommended :)
 (If the user of the DSL tries to execute a `copy` operation with this string patcher, the call to `reduced()` will throw an a descriptive error.)
 
-And that's all you need to do.
+And that's all you need to do to get a working custom patcher.
 
 To pull it all together, the entire `StringPatchType` definition is this:
 
@@ -133,5 +133,22 @@ public struct StringPatchType: PatchType {
             return container
         }
     )
+}
+```
+
+# Refining your custom patcher
+
+The above is the bare minimum for a custom patcher. You can improve it beyond that though by adding conveneniences for the DSL.
+
+For example, the toy String patcher contains the following convenience:
+
+```swift
+/// Conveience for string patcher's test method that doesn't require an address param
+/// (the expected content is all we need, we're checking to see if it's in the string)
+public func Test(expectedContent: String) -> AddressedPatch<StringPatchType> {
+    // Note we give expectedContent for the address as well as the expectedContent,
+    // as it's required for this patcher func (but not used)
+    return AddressedPatch(patchSpec: .test(expectedContent, expectedContent),
+                          contentPatch: PatchedContent<StringPatchType>(content: expectedContent))
 }
 ```
