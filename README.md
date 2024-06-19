@@ -138,7 +138,7 @@ public struct StringPatchType: PatchType {
 
 # Refining your custom patcher
 
-The above is the bare minimum for a custom patcher. You can improve it beyond that though by adding conveneniences for the DSL.
+The above is the bare minimum for a custom patcher. You can improve it beyond that by adding conveneniences for the DSL.
 
 For example, the toy String patcher contains the following convenience:
 
