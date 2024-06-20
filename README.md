@@ -83,8 +83,7 @@ And finally, our struct needs to be told how to perform the various kinds of pat
     )
 ```
 
-Note that we don't provide an implementation of `copy` for our string patcher. Every kind of operation is optional  
-when you write a patcher, but providing at least one is recommended :)
+Note that we don't provide an implementation of `copy` for our string patcher. Every kind of operation is optional when you write a patcher, but providing at least one is recommended :)
 (If the user of the DSL tries to execute a `copy` operation with this string patcher, the call to `reduced()` will throw a descriptive error.)
 
 And that's all you need to do to get a working custom patcher.
