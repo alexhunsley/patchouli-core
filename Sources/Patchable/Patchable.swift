@@ -40,8 +40,8 @@ public struct Patchable<T: PatchType> {
     }
 }
 
-// hmm. We *could* do this by using the PatchType and going to the intermediate type,
-// and then adding the final patcher. Let's be explicit for now though.
+// let's be nice and explicit about the two-stage idea for now.
+// Thought: the one stage patcher is a specialisation of this with I = C.
 public struct TwoStagePatchable<T: TwoStagePatchType> {
     public typealias C = T.ContentType
     public typealias I = T.IntermediateContentType
@@ -81,5 +81,3 @@ enum CoreReducer<PT: PatchType, TSPT: TwoStagePatchType> {
     case oneStage(Patchable<PT>)
     case twoStage(TwoStagePatchable<TSPT>)
 }
-
-
