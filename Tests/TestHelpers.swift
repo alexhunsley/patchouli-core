@@ -32,7 +32,7 @@ extension PatchType {
 extension PatchedContent {
 
     /// Tests both reduced and reduce
-    func testReducers(expectedContent: T.ContentType, callingFunc: String = #function) throws where T.ContentType: Equatable {
+    func testReducers(expectedContent: T.ContentType, callingFunc: String = #function) throws where T.ContentType: Equatable, T.ContentType == T.EncodedContentType {
 
         // non-mutating reduced() func
         let reduced = try reduced()
@@ -41,14 +41,15 @@ extension PatchedContent {
                        "Didn't get expected content from reduced() in \(callingFunc)")
     }
 
-    func assertReducersDoNotThrow() {
-        var mutableCopy = self
+    func assertReducersDoNotThrow() where T.ContentType == T.EncodedContentType {
+        let mutableCopy = self
         XCTAssertNoThrow(try mutableCopy.reduced())
     }
 }
 
 public struct DummyPatchType: PatchType {
     public typealias ContentType = Once
+    public typealias EncodedContentType = Once
     public typealias AddressType = Never
 
     public static var emptyContent: ContentType { Once.once }

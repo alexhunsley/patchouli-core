@@ -6,14 +6,31 @@ import Foundation
 public extension PatchedContent {
 
     /// Convenience that calls reduce using the patchable for the PatchType (i.e. T)
-    func reduced() throws -> T.ContentType {
+
+    /// Simple (one stage) reduced.
+    func reduced() throws -> T.ContentType where T.ContentType == T.EncodedContentType {
         try reduced(T.patcher)
     }
+
+//    func doSomething<A, B, T>(with value: T) where T: MyType<A, B> {
+// hmm thorny. Might be better after all working with usual PatchType, and adding on additional bit for the final reduce!
+
+    // Hmmm.
+//    func reduced<P, TSP, PT, TSPT>(_ reducer: CoreReducer<P, TSP>) throws -> T.ContentType where P: Patchable<PT>, TSP: TwoStagePatchable<TSPT> {
+//        switch reducer {
+//        case .oneStage:
+//            break
+//        case .twoStage:
+//            break
+//        }
+//    }
 
     /// Returns the content produced by applying the patches to the content
     /// using the `patcher` protocol witness.
     /// To use the default patcher for a PatchType, please instead use the convenience `reduced()`.
-    func reduced(_ patcher: Patchable<T>) throws -> T.ContentType {
+    ///
+    ///  Simple (one stage) reduced.
+    func reduced(_ patcher: Patchable<T>) throws -> T.ContentType where T.ContentType == T.EncodedContentType {
         var accumulatedReduceResult = content
 
         do {

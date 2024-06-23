@@ -6,6 +6,7 @@ public typealias StringPatchList = [StringPatchItem]
 
 public struct StringPatchType: PatchType {
     public typealias ContentType = String
+    public typealias EncodedContentType = String
     public typealias AddressType = String
 
     public static var emptyContent = ""

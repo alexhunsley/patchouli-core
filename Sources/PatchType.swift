@@ -10,23 +10,13 @@ public typealias PatchListProducer<T: PatchType> = () -> [AddressedPatch<T>]
 /// You can make your own PatchType conformances (see e.g. StringPatchType for an example).
 public protocol PatchType {
     associatedtype ContentType
+    associatedtype EncodedContentType
     associatedtype AddressType
 
     static var emptyContent: ContentType { get }
 
     /// A Patchable protcol witness, used by the reducer
     static var patcher: Patchable<Self> { get }
-}
-
-public protocol TwoStagePatchType {
-    associatedtype ContentType
-    associatedtype IntermediateContentType
-    associatedtype AddressType
-
-    static var emptyContent: ContentType { get }
-
-    /// A Patchable protcol witness, used by the reducer
-    static var patcher: TwoStagePatchable<Self> { get }
 }
 
 /// This generic PatchSpec's design is based on JSONPatch's operations.
