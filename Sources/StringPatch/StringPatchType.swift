@@ -13,30 +13,38 @@ public struct StringPatchType: PatchType {
 
     /// The Protocol Witness used by the reducer
     static public let patcher = Patchable<StringPatchType>(
-        added: { (container: String, content: String, address: String) -> String in
+        added: { (container: String?, content: String, address: String) -> String in
             // We interpret 'add' in string matching to mean "place a copy of content
             // before every occurence of the address".
             // if the address isn't found in the string, we don't care.
-            container.prefixing(address, with: content)
+            guard let container else {
+                assertionFailure("Got nil for content!")
+                return StringPatchType.emptyContent
+            }
+            return container.prefixing(address, with: content)
         },
-        removed: { (container: String, address: String) in
-            container.replacingOccurrences(of: address, with: "")
+        removed: { (container: String?, address: String) in
+            guard let container else { throw("No container in StringPatchType! 1") }
+            return container.replacingOccurrences(of: address, with: "")
         },
-        replaced: { (container: String, replacement: String, address: String) -> String in
+        replaced: { (container: String?, replacement: String, address: String) -> String in
+            guard let container else { throw("No container in StringPatchType! 2") }
             // NB this replaces all occurrences!
             // But that’s expected for a content-based Address
-            container.replacingOccurrences(of: address, with: replacement)
+            return container.replacingOccurrences(of: address, with: replacement)
         },
         // 'copied' doesn't really make sense, so omitted
         //    copied: {
-        moved: { (container: String, fromAddress: String, toAddress: String) -> String in
-            container
+        moved: { (container: String?, fromAddress: String, toAddress: String) -> String in
+            guard let container else { throw("No container in StringPatchType! 3") }
+            return container
             // the order here is crucial
                 .replacingOccurrences(of: fromAddress, with: "")
                 .replacingOccurrences(of: toAddress, with: fromAddress)
         },
         // we don't care about the expectedContent, it's just the address for this string patcher
-        test: { (container: String, _: String, address: String) in
+        test: { (container: String?, _: String, address: String) in
+            guard let container else { throw("No container in StringPatchType! 4") }
             if !container.contains(address) {
                 throw PatchouliError<StringPatchType>.testFailed(container, address, address)
             }

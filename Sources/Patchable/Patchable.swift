@@ -17,12 +17,14 @@ public struct Patchable<T: PatchType> {
     public typealias I = T.EncodedContentType
     public typealias A = T.AddressType
 
-    public typealias AddedHandler = @Sendable (C, C, A) throws -> I
-    public typealias RemovedHandler = @Sendable (C, A) throws -> I
-    public typealias ReplacedHandler = @Sendable (C, C, A) throws -> I
-    public typealias CopiedHandler = @Sendable (C, A, A) throws -> I
-    public typealias MovedHandler = @Sendable (C, A, A) throws -> I
-    public typealias TestHandler = @Sendable (C, C, A) throws -> I
+    public typealias AddedHandler = @Sendable (C?, C, A) throws -> I
+    public typealias RemovedHandler = @Sendable (C?, A) throws -> I
+    public typealias ReplacedHandler = @Sendable (C?, C, A) throws -> I
+    public typealias CopiedHandler = @Sendable (C?, A, A) throws -> I
+    public typealias MovedHandler = @Sendable (C?, A, A) throws -> I
+    public typealias TestHandler = @Sendable (C?, C, A) throws -> I
+
+    public typealias ListCombiner = @Sendable ([I]) throws -> C
 
     public let added: AddedHandler?
     public let removed: RemovedHandler?
@@ -31,12 +33,15 @@ public struct Patchable<T: PatchType> {
     public let moved: MovedHandler?
     public let test: TestHandler?
 
+    public let listCombiner: ListCombiner?
+
     public init(added: AddedHandler? = nil,
                 removed: RemovedHandler? = nil,
                 replaced: ReplacedHandler? = nil,
                 copied: CopiedHandler? = nil,
                 moved: MovedHandler? = nil,
-                test: TestHandler? = nil) {
+                test: TestHandler? = nil,
+                listCombiner: ListCombiner? = nil) {
 
         self.added = added
         self.removed = removed
@@ -44,5 +49,7 @@ public struct Patchable<T: PatchType> {
         self.copied = copied
         self.moved = moved
         self.test = test
+
+        self.listCombiner = listCombiner
     }
 }
