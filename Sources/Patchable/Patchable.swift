@@ -24,7 +24,7 @@ public struct Patchable<T: PatchType> {
     public typealias MovedHandler = @Sendable (C?, A, A) throws -> I
     public typealias TestHandler = @Sendable (C?, C, A) throws -> I
 
-    public typealias ListCombiner = @Sendable ([I]) throws -> C
+    public typealias ListCombiner = @Sendable (C, [I]) throws -> C
 
     public let added: AddedHandler?
     public let removed: RemovedHandler?

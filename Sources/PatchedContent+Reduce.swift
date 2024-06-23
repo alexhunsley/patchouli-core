@@ -14,6 +14,10 @@ public extension PatchedContent {
         try reduced(T.patcher)
     }
 
+    func reduced() throws -> T.ContentType {
+        try reduced(T.patcher)
+    }
+
     //    func doSomething<A, B, T>(with value: T) where T: MyType<A, B> {
     // hmm thorny. Might be better after all working with usual PatchType, and adding on additional bit for the final reduce!
 
@@ -148,21 +152,7 @@ public extension PatchedContent {
         }
         // turn list result into JSON list with items
 
-        return try listCombiner(encodedResults)
+        return try listCombiner(content, encodedResults)
 //        return combineDataArray(encodedResults)
     }
-}
-
-func combineDataArray(_ dataArray: [Data]) throws -> Data {
-    // Convert each Data to a String
-    let stringArray = dataArray.compactMap { String(data: $0, encoding: .utf8) }
-
-    // Join the strings with ","
-    let combinedString = "[" + stringArray.joined(separator: ",") + "]"
-
-    // Convert the combined string back to Data
-    guard let combinedStringData = combinedString.data(using: .utf8) else {
-        throw "Couldn't make string in combineDataArray()"
-    }
-    return combinedStringData
 }
