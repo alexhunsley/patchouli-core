@@ -26,7 +26,6 @@ public extension PatchedContent {
                 case let .add(address):
                     if let newContent = try targetContent?.reduced(patcher) {
                         guard let added = patcher.added else { throw PatchouliError<T>.addNotSupported }
-                        print("new content, address = \(newContent), \(address)")
                         try accumulatedReduceResult = added(accumulatedReduceResult, newContent, address)
                     }
 
