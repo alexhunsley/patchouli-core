@@ -18,6 +18,17 @@ public protocol PatchType {
     static var patcher: Patchable<Self> { get }
 }
 
+public protocol TwoStagePatchType {
+    associatedtype ContentType
+    associatedtype IntermediateContentType
+    associatedtype AddressType
+
+    static var emptyContent: ContentType { get }
+
+    /// A Patchable protcol witness, used by the reducer
+    static var patcher: TwoStagePatchable<Self> { get }
+}
+
 /// This generic PatchSpec's design is based on JSONPatch's operations.
 public enum PatchSpec<T: PatchType> {
     public typealias A = T.AddressType
