@@ -1,5 +1,10 @@
 # Patchouli Core
 
+[![Apache 2 License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Falexhunsley%2Fpatchouli-core%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/alexhunsley/patchouli-core)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Falexhunsley%2Fpatchouli-core%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/alexhunsley/patchouli-core)
+[![Build System](https://img.shields.io/badge/dependency%20management-spm-yellow.svg)](https://swift.org/package-manager/)
+
 is a generic patching engine and DSL for Swift, based on JSON Patch's operations (`Add`, `Remove`, `Replace`, `Copy`, `Move`, and `Test`).
 
 It is used by [Patchouli JSON](https://github.com/alexhunsley/patchouli-jsonpatch).
