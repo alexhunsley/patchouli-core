@@ -1,3 +1,7 @@
+<div align="center">
+<img src="https://github.com/alexhunsley/patchouli-jsonpatch/blob/main/Tests/Resources/patchouli-core-logo-1-scaled-378x379.jpg">
+</div>
+
 # Patchouli Core
 
 [![Apache 2 License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://opensource.org/licenses/Apache-2.0)
